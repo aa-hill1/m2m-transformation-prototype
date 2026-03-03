@@ -1,13 +1,13 @@
-package org.example.transformModel;
+package org.example.app.transformModel;
 
-import org.example.transformModel.generalComps.ContextEventComponent;
+import org.example.app.transformModel.generalComps.ContextEventComponent;
 
 public class RoboticPlatform extends ContextEventComponent {
-    public RoboticPlatform(String name) {
-        super(name);
+    public RoboticPlatform(int id, String name) {
+        super(id, name);
     }
 
-    public RoboticPlatform(String name, int parentId) {
-        super(name, parentId);
+    public RoboticPlatform(int id, String name, int parentId) {
+        super(id, name, parentId);
     }
 }

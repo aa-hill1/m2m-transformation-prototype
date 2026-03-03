@@ -1,12 +1,12 @@
-package org.example.transformModel.context;
+package org.example.app.transformModel.context;
 
-import org.example.transformModel.generalComps.NamedComponent;
+import org.example.app.transformModel.generalComps.NamedComponent;
 
 public class ContextData extends NamedComponent {
     protected ContextType type;
 
-    public ContextData(String name, int parentId, ContextType type) {
-        super(name, parentId);
+    public ContextData(int id, String name, int parentId, ContextType type) {
+        super(id, name, parentId);
         this.type = type;
     }
 

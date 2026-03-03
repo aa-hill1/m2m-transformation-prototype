@@ -1,12 +1,12 @@
-package org.example.transformModel.context;
+package org.example.app.transformModel.context;
 
-import org.example.transformModel.Operation;
+import org.example.app.transformModel.Operation;
 
 public class OpSig extends ContextData {
     private Operation operation;
 
-    public OpSig(String name, int parentId, Operation operation) {
-        super(name, parentId, ContextType.OP_SIG);
+    public OpSig(int id, String name, int parentId, Operation operation) {
+        super(id, name, parentId, ContextType.OP_SIG);
         this.operation = operation;
     }
 

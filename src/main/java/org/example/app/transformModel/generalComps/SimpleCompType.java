@@ -1,4 +1,4 @@
-package org.example.transformModel.generalComps;
+package org.example.app.transformModel.generalComps;
 
 public enum SimpleCompType {
     IMPORTS,

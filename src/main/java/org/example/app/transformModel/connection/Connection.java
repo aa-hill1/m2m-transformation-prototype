@@ -1,13 +1,13 @@
-package org.example.transformModel.connection;
+package org.example.app.transformModel.connection;
 
-import org.example.transformModel.generalComps.NamedComponent;
+import org.example.app.transformModel.generalComps.NamedComponent;
 
 public class Connection  extends NamedComponent {
     protected NamedComponent src;
     protected NamedComponent tgt;
 
-    public Connection(String name, int parentId, NamedComponent src, NamedComponent tgt) {
-        super(name, parentId);
+    public Connection(int id, String name, int parentId, NamedComponent src, NamedComponent tgt) {
+        super(id, name, parentId);
         this.src = src;
         this.tgt = tgt;
     }

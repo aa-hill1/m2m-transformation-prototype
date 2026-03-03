@@ -1,6 +1,6 @@
-package org.example.transformModel.generalComps;
+package org.example.app.transformModel.generalComps;
 
-import org.example.transformModel.context.ContextData;
+import org.example.app.transformModel.context.ContextData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,12 +8,12 @@ import java.util.List;
 public class ContextComponent extends NameOnlyComponent {
     protected List<ContextData> context = new ArrayList<>();
 
-    public ContextComponent(String name, SimpleCompType type) {
-        super(name, type);
+    public ContextComponent(int id, String name, SimpleCompType type) {
+        super(id, name, type);
     }
 
-    public ContextComponent(String name, int parentId, SimpleCompType type) {
-        super(name, parentId, type);
+    public ContextComponent(int id, String name, int parentId, SimpleCompType type) {
+        super(id, name, parentId, type);
         context = new ArrayList<ContextData>();
     }
 

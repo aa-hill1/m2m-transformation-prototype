@@ -1,4 +1,4 @@
-package org.example.transformModel.stm;
+package org.example.app.transformModel.stm;
 
 public enum JunctionType {
     DEFAULT,

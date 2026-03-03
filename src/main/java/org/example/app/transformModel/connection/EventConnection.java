@@ -1,13 +1,13 @@
-package org.example.transformModel.connection;
+package org.example.app.transformModel.connection;
 
-import org.example.transformModel.EventBox;
-import org.example.transformModel.generalComps.NamedComponent;
+import org.example.app.transformModel.EventBox;
+import org.example.app.transformModel.generalComps.NamedComponent;
 
 public class EventConnection extends Connection {
     private boolean bidi = false;
 
-    public EventConnection(String name, int parentId, NamedComponent src, NamedComponent tgt) {
-        super(name, parentId, src, tgt);
+    public EventConnection(int id, String name, int parentId, NamedComponent src, NamedComponent tgt) {
+        super(id, name, parentId, src, tgt);
         if (((EventBox) src).getEvent().isBroadcast() || ((EventBox) tgt).getEvent().isBroadcast()) {
             bidi = true;
         }

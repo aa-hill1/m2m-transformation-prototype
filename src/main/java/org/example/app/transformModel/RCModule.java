@@ -1,8 +1,8 @@
-package org.example.transformModel;
+package org.example.app.transformModel;
 
-import org.example.transformModel.connection.Connection;
-import org.example.transformModel.generalComps.NamedComponent;
-import org.example.transformModel.stm.StateMachine;
+import org.example.app.transformModel.connection.Connection;
+import org.example.app.transformModel.generalComps.NamedComponent;
+import org.example.app.transformModel.stm.StateMachine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +14,8 @@ public class RCModule extends NamedComponent {
     private List<RoboticPlatform> rps = new ArrayList<>();
     private List<StateMachine> stms = new ArrayList<>();
 
-    public RCModule(String name) {
-        super(name);
+    public RCModule(int id, String name) {
+        super(id, name);
     }
 
     public List<Connection> getConnections() {

@@ -1,12 +1,12 @@
-package org.example.transformModel.context;
+package org.example.app.transformModel.context;
 
-import org.example.transformModel.generalComps.ContextComponent;
+import org.example.app.transformModel.generalComps.ContextComponent;
 
 public class DefInterfaceRef extends ContextData {
     private ContextComponent rcInterface;
 
-    public DefInterfaceRef(String name, int parentId, ContextComponent rcInterface) {
-        super(name, parentId, ContextType.D_INTERFACE);
+    public DefInterfaceRef(int id, String name, int parentId, ContextComponent rcInterface) {
+        super(id, name, parentId, ContextType.D_INTERFACE);
         this.rcInterface = rcInterface;
     }
 

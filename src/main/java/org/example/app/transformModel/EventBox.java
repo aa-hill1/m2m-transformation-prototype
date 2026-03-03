@@ -1,13 +1,13 @@
-package org.example.transformModel;
+package org.example.app.transformModel;
 
-import org.example.transformModel.context.Event;
-import org.example.transformModel.generalComps.NamedComponent;
+import org.example.app.transformModel.context.Event;
+import org.example.app.transformModel.generalComps.NamedComponent;
 
 public class EventBox extends NamedComponent {
     private Event event;
 
-    public EventBox(String name, int parentId, Event event) {
-        super(name, parentId);
+    public EventBox(int id, String name, int parentId, Event event) {
+        super(id, name, parentId);
         this.event = event;
     }
 

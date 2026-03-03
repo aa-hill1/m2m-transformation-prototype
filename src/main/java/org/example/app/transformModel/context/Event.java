@@ -1,10 +1,10 @@
-package org.example.transformModel.context;
+package org.example.app.transformModel.context;
 
 public class Event extends ContextData {
     private boolean broadcast;
 
-    public Event(String name, int parentId, boolean broadcast) {
-        super(name, parentId, ContextType.EVENT);
+    public Event(int id, String name, int parentId, boolean broadcast) {
+        super(id, name, parentId, ContextType.EVENT);
         this.broadcast = broadcast;
     }
 

@@ -1,4 +1,4 @@
-package org.example.transformModel.context;
+package org.example.app.transformModel.context;
 
 public enum ContextType {
     TEXT,

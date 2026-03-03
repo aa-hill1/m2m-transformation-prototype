@@ -1,24 +1,25 @@
-package org.example.transformModel;
+package org.example.app.transformModel;
 
-import org.example.transformModel.connection.Connection;
-import org.example.transformModel.generalComps.NamedComponent;
-import org.example.transformModel.stm.StateMachine;
+import org.example.app.transformModel.connection.Connection;
+import org.example.app.transformModel.generalComps.ContextEventComponent;
+import org.example.app.transformModel.generalComps.NamedComponent;
+import org.example.app.transformModel.stm.StateMachine;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Controller extends NamedComponent {
+public class Controller extends ContextEventComponent {
     private List<Connection> connections = new ArrayList<>();
     private List<StateMachine> stms = new ArrayList<>();
     private List<Reference> refs = new ArrayList<>();
     private List<Operation> operations = new ArrayList<>();
 
-    public Controller(String name) {
-        super(name);
+    public Controller(int id, String name) {
+        super(id, name);
     }
 
-    public Controller(String name, int parentId) {
-        super(name, parentId);
+    public Controller(int id, String name, int parentId) {
+        super(id, name, parentId);
     }
 
     public List<Connection> getConnections() {

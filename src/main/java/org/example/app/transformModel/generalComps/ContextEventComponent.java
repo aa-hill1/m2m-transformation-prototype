@@ -1,22 +1,22 @@
-package org.example.transformModel.generalComps;
+package org.example.app.transformModel.generalComps;
 
-import org.example.transformModel.EventBox;
-import org.example.transformModel.context.ContextData;
+import org.example.app.transformModel.EventBox;
+import org.example.app.transformModel.context.ContextData;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContextEventComponent extends NamedComponent {
+public abstract class ContextEventComponent extends NamedComponent {
     protected List<ContextData> context;
     protected List<EventBox> eventBoxes;
 
-    public ContextEventComponent(String name) {
-        super(name);
+    public ContextEventComponent(int id, String name) {
+        super(id, name);
         context = new ArrayList<>();
     }
 
-    public ContextEventComponent(String name, int parentId) {
-        super(name, parentId);
+    public ContextEventComponent(int id, String name, int parentId) {
+        super(id, name, parentId);
         eventBoxes = new ArrayList<>();
     }
 

@@ -1,7 +1,7 @@
-package org.example.transformModel.stm;
+package org.example.app.transformModel.stm;
 
-import org.example.transformModel.connection.Connection;
-import org.example.transformModel.generalComps.NamedComponent;
+import org.example.app.transformModel.connection.Connection;
+import org.example.app.transformModel.generalComps.NamedComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ public class StmBody extends NamedComponent {
     private List<Junction> junctions = new ArrayList<>();
     private List<Connection> transitions = new ArrayList<>();
 
-    public StmBody(String name, int parentId) {
-        super(name, parentId);
+    public StmBody(int id, String name, int parentId) {
+        super(id, name, parentId);
     }
 
     public List<State> getStates() {

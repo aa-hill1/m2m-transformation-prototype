@@ -1,12 +1,12 @@
-package org.example.transformModel.stm;
+package org.example.app.transformModel.stm;
 
-import org.example.transformModel.generalComps.NamedComponent;
+import org.example.app.transformModel.generalComps.NamedComponent;
 
 public class Junction extends NamedComponent {
     private JunctionType type;
 
-    public Junction(String name, int parentId, JunctionType type) {
-        super(name, parentId);
+    public Junction(int id, String name, int parentId, JunctionType type) {
+        super(id, name, parentId);
         this.type = type;
     }
 
