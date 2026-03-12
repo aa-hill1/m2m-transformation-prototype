@@ -1,6 +1,8 @@
 package org.example.app.transformModel;
 
+import org.example.app.transformModel.context.ContextData;
 import org.example.app.transformModel.generalComps.ContextComponent;
+import org.example.app.transformModel.generalComps.NamedComponent;
 import org.example.app.transformModel.generalComps.SimpleCompType;
 import org.example.app.transformModel.stm.StmBody;
 
@@ -19,5 +21,14 @@ public class Operation extends ContextComponent {
 
     public StmBody getStmBody() {
         return stateMachine;
+    }
+
+    @Override
+    public void addChild(NamedComponent child) {
+        if (child instanceof ContextData) {
+            super.addChild(child);
+        } else {
+            stateMachine.addChild(child);
+        }
     }
 }

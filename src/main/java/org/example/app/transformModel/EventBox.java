@@ -23,4 +23,14 @@ public class EventBox extends NamedComponent {
     public String getEventName() {
         return name.split(" ")[0];
     }
+
+    @Override
+    public void addChild(NamedComponent child) {
+        throw new RuntimeException(
+                String.format(
+                        "Cannot make component %s a child of eventBox %s",
+                        child.getName(),
+                        name)
+        );
+    }
 }

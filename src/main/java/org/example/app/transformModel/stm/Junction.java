@@ -13,4 +13,14 @@ public class Junction extends NamedComponent {
     public JunctionType getType() {
         return type;
     }
+
+    @Override
+    public void addChild(NamedComponent child) {
+        throw new RuntimeException(
+                String.format(
+                        "Cannot make component %s a child of junction %s",
+                        child.getName(),
+                        name)
+        );
+    }
 }

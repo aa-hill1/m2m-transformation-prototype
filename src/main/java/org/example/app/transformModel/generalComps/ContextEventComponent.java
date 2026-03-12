@@ -24,7 +24,8 @@ public abstract class ContextEventComponent extends NamedComponent {
 
     public void addContextLine(ContextData contextLine) {
         if (context.contains(contextLine)) {
-            throw new RuntimeException(String.format("Cannot add context %s to component %s twice", contextLine.getName(), name));
+            throw new RuntimeException(
+                    String.format("Cannot add context %s to component %s twice", contextLine.getName(), name));
         }
         context.add(contextLine);
     }
@@ -35,7 +36,8 @@ public abstract class ContextEventComponent extends NamedComponent {
 
     public void addEventBox(EventBox eventBox) {
         if (eventBoxes.contains(eventBox)) {
-            throw new RuntimeException(String.format("Cannot add event box %s to component %s twice", eventBox.getName(), name));
+            throw new RuntimeException(
+                    String.format("Cannot add event box %s to component %s twice", eventBox.getName(), name));
         }
         eventBoxes.add(eventBox);
     }
@@ -47,5 +49,21 @@ public abstract class ContextEventComponent extends NamedComponent {
             }
         }
         return null;
+    }
+
+    @Override
+    public void addChild(NamedComponent child) {
+        if (child instanceof ContextData) {
+            addContextLine((ContextData) child);
+        } else if (child instanceof EventBox) {
+            addEventBox((EventBox) child);
+        } else {
+            throw new RuntimeException(
+                    String.format(
+                            "Cannot make component %s a child of component %s",
+                            child.getName(),
+                            name)
+            );
+        }
     }
 }

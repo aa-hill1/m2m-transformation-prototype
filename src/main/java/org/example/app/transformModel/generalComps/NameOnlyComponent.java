@@ -19,6 +19,11 @@ public class NameOnlyComponent extends NamedComponent {
 
     @Override
     public void addChild(NamedComponent child) {
-        throw new RuntimeException("Cannot call for NameOnlyComponent of type" + type);
+        throw new RuntimeException(
+                String.format(
+                        "Cannot make component %s a child of component %s",
+                        child.getName(),
+                        name)
+        );
     }
 }

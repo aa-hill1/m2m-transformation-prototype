@@ -61,4 +61,13 @@ public class Connection  extends NamedComponent {
     public void makeAsync() {
         label = "async";
     }
+
+    @Override
+    public void addChild(NamedComponent child) {
+        throw new RuntimeException(
+                String.format(
+                        "Cannot make component %s a child of connection %s",
+                        child.getName(),
+                        name));
+    }
 }

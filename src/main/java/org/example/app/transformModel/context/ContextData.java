@@ -13,4 +13,13 @@ public class ContextData extends NamedComponent {
     public ContextType getType() {
         return type;
     }
+
+    @Override
+    public void addChild(NamedComponent child) {
+        throw new RuntimeException(
+                String.format(
+                        "Cannot make component %s a child of contextData %s",
+                        child.getName(),
+                        name));
+    }
 }

@@ -47,4 +47,19 @@ public class Reference extends ContextEventComponent {
     public void addContextLine(ContextData contextLine) {
         throw new RuntimeException("Cannot add context to a reference");
     }
+
+    @Override
+    public void addChild(NamedComponent child) {
+        if (child instanceof EventBox){
+            super.addChild(child);
+        } else {
+            throw new RuntimeException(
+                    String.format(
+                            "Cannot make component %s a child of reference %s",
+                            child.getName(),
+                            name
+                    )
+            );
+        }
+    }
 }

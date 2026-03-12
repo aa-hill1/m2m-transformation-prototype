@@ -1,7 +1,9 @@
 package org.example.app.transformModel;
 
 import org.example.app.transformModel.connection.Connection;
+import org.example.app.transformModel.context.ContextData;
 import org.example.app.transformModel.generalComps.ContextEventComponent;
+import org.example.app.transformModel.generalComps.NamedComponent;
 import org.example.app.transformModel.stm.StateMachine;
 
 import java.util.ArrayList;
@@ -26,7 +28,8 @@ public class Controller extends ContextEventComponent {
     }
     public void addConnection(Connection connection) {
         if (connections.contains(connection)) {
-            throw new RuntimeException(String.format("Cannot add connection %s to controller %s twice", connection.getName(), name));
+            throw new RuntimeException(
+                    String.format("Cannot add connection %s to controller %s twice", connection.getName(), name));
         }
         connections.add(connection);
     }
@@ -36,7 +39,8 @@ public class Controller extends ContextEventComponent {
     }
     public void addStm(StateMachine stm) {
         if (stms.contains(stm)) {
-            throw new RuntimeException(String.format("Cannot add STM %s to controller %s twice", stm.getName(), name));
+            throw new RuntimeException(
+                    String.format("Cannot add STM %s to controller %s twice", stm.getName(), name));
         }
         stms.add(stm);
     }
@@ -46,7 +50,8 @@ public class Controller extends ContextEventComponent {
     }
     public void addRef(Reference ref) {
         if (refs.contains(ref)) {
-            throw new RuntimeException(String.format("Cannot add reference %s to controller %s twice", ref.getName(), name));
+            throw new RuntimeException(
+                    String.format("Cannot add reference %s to controller %s twice", ref.getName(), name));
         }
         refs.add(ref);
     }
@@ -56,8 +61,32 @@ public class Controller extends ContextEventComponent {
     }
     public void addOperation(Operation operation) {
         if (operations.contains(operation)) {
-            throw new RuntimeException(String.format("Cannot add operation %s to controller %s twice", operation.getName(), name));
+            throw new RuntimeException(
+                    String.format("Cannot add operation %s to controller %s twice", operation.getName(), name));
         }
         operations.add(operation);
+    }
+
+    @Override
+    public void addChild(NamedComponent child) {
+        if (child instanceof ContextData || child instanceof EventBox){
+            super.addChild(child);
+        } else if (child instanceof Connection) {
+            addConnection((Connection) child);
+        } else if (child instanceof StateMachine) {
+            addStm((StateMachine) child);
+        } else if (child instanceof Reference) {
+            addRef((Reference) child);
+        } else if (child instanceof Operation) {
+            addOperation((Operation) child);
+        } else {
+            throw new RuntimeException(
+                    String.format(
+                            "Cannot make component %s a child of controller %s",
+                            child.getName(),
+                            name
+                    )
+            );
+        }
     }
 }

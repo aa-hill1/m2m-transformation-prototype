@@ -47,4 +47,17 @@ public class State extends NamedComponent {
     public StmBody getStmBody() {
         return stateMachine;
     }
+
+    @Override
+    public void addChild(NamedComponent child) {
+        if (finalState) {
+            throw new RuntimeException(
+                    String.format(
+                    "Cannot make component %s a child of final state %s",
+                    child.getName(),
+                    name)
+            );
+        }
+        stateMachine.addChild(child);
+    }
 }

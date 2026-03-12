@@ -1,6 +1,9 @@
 package org.example.app.transformModel.stm;
 
+import org.example.app.transformModel.EventBox;
+import org.example.app.transformModel.context.ContextData;
 import org.example.app.transformModel.generalComps.ContextEventComponent;
+import org.example.app.transformModel.generalComps.NamedComponent;
 
 public class StateMachine extends ContextEventComponent {
     private StmBody body;
@@ -17,5 +20,14 @@ public class StateMachine extends ContextEventComponent {
 
     public StmBody getStmBody() {
         return body;
+    }
+
+    @Override
+    public void addChild(NamedComponent child) {
+        if (child instanceof ContextData || child instanceof EventBox) {
+            super.addChild(child);
+        } else {
+            body.addChild(child);
+        }
     }
 }

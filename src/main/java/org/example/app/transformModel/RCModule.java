@@ -23,7 +23,8 @@ public class RCModule extends NamedComponent {
     }
     public void addConnection(Connection connection) {
         if (connections.contains(connection)) {
-            throw new RuntimeException(String.format("Cannot add connection %s to module %s twice", connection.getName(), name));
+            throw new RuntimeException(
+                    String.format("Cannot add connection %s to module %s twice", connection.getName(), name));
         }
         connections.add(connection);
     }
@@ -33,7 +34,8 @@ public class RCModule extends NamedComponent {
     }
     public void addController(Controller controller) {
         if (controllers.contains(controller)) {
-            throw new RuntimeException(String.format("Cannot add controller %s to module %s twice", controller.getName(), name));
+            throw new RuntimeException(
+                    String.format("Cannot add controller %s to module %s twice", controller.getName(), name));
         }
         controllers.add(controller);
     }
@@ -43,7 +45,8 @@ public class RCModule extends NamedComponent {
     }
     public void addOperation(Operation operation) {
         if (operations.contains(operation)) {
-            throw new RuntimeException(String.format("Cannot add operation %s to module %s twice", operation.getName(), name));
+            throw new RuntimeException(
+                    String.format("Cannot add operation %s to module %s twice", operation.getName(), name));
         }
         operations.add(operation);
     }
@@ -53,7 +56,8 @@ public class RCModule extends NamedComponent {
     }
     public void addRP(RoboticPlatform rp) {
         if (rps.contains(rp)) {
-            throw new RuntimeException(String.format("Cannot add RP %s to module %s twice", rp.getName(), name));
+            throw new RuntimeException(
+                    String.format("Cannot add RP %s to module %s twice", rp.getName(), name));
         }
         rps.add(rp);
     }
@@ -63,8 +67,32 @@ public class RCModule extends NamedComponent {
     }
     public void addSTM(StateMachine stm) {
         if (stms.contains(stm)) {
-            throw new RuntimeException(String.format("Cannot add STM %s to module %s twice", stm.getName(), name));
+            throw new RuntimeException(
+                    String.format("Cannot add STM %s to module %s twice", stm.getName(), name));
         }
         stms.add(stm);
+    }
+
+    @Override
+    public void addChild(NamedComponent child) {
+        if (child instanceof Connection) {
+            addConnection((Connection) child);
+        } else if (child instanceof Controller) {
+            addController((Controller) child);
+        } else if (child instanceof Operation) {
+            addOperation((Operation) child);
+        } else if (child instanceof RoboticPlatform) {
+            addRP((RoboticPlatform) child);
+        } else if (child instanceof StateMachine) {
+            addSTM((StateMachine) child);
+        } else {
+            throw new RuntimeException(
+                    String.format(
+                            "Cannot make component %s a child of RCModule %s",
+                            child.getName(),
+                            name
+                    )
+            );
+        }
     }
 }

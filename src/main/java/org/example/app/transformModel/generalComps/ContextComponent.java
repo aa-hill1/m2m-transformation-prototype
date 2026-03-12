@@ -34,13 +34,26 @@ public class ContextComponent extends NameOnlyComponent {
 
     public void addContextLine(ContextData contextLine) {
         if (context.contains(contextLine)) {
-            throw new RuntimeException(String.format("Cannot add context %s to component %s twice", contextLine.getName(), name));
+            throw new RuntimeException(
+                    String.format(
+                            "Cannot add context %s to component %s twice",
+                            contextLine.getName(),
+                            name));
         }
         context.add(contextLine);
     }
 
     @Override
     public void addChild(NamedComponent child) {
-        return;
+        if (child instanceof ContextData) {
+            addContextLine((ContextData) child);
+        } else {
+            throw new RuntimeException(
+                    String.format(
+                            "Cannot make component %s a child of contextComponent %s",
+                            child.getName(),
+                            name)
+            );
+        }
     }
 }
