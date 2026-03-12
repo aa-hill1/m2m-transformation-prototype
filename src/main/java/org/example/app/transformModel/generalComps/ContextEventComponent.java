@@ -7,17 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ContextEventComponent extends NamedComponent {
-    protected List<ContextData> context;
-    protected List<EventBox> eventBoxes;
+    protected List<ContextData> context = new ArrayList<>();
+    protected List<EventBox> eventBoxes = new ArrayList<>();
 
     public ContextEventComponent(int id, String name) {
         super(id, name);
-        context = new ArrayList<>();
     }
 
     public ContextEventComponent(int id, String name, int parentId) {
         super(id, name, parentId);
-        eventBoxes = new ArrayList<>();
     }
 
     public List<ContextData> getContext() {
@@ -37,8 +35,17 @@ public abstract class ContextEventComponent extends NamedComponent {
 
     public void addEventBox(EventBox eventBox) {
         if (eventBoxes.contains(eventBox)) {
-            throw new RuntimeException(String.format("Cannot add context %s to component %s twice", eventBox.getName(), name));
+            throw new RuntimeException(String.format("Cannot add event box %s to component %s twice", eventBox.getName(), name));
         }
         eventBoxes.add(eventBox);
+    }
+
+    public EventBox getEventBoxWithName(String name) {
+        for (EventBox box : eventBoxes) {
+            if (box.getEventName().equals(name)) {
+                return box;
+            }
+        }
+        return null;
     }
 }

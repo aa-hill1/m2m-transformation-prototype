@@ -33,4 +33,6 @@ public abstract class NamedComponent {
     public void setParentId(int parentId) {
         this.parentId = parentId;
     }
+
+    public abstract void addChild(NamedComponent child);
 }

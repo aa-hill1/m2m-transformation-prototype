@@ -3,20 +3,62 @@ package org.example.app.transformModel.connection;
 import org.example.app.transformModel.generalComps.NamedComponent;
 
 public class Connection  extends NamedComponent {
-    protected NamedComponent src;
-    protected NamedComponent tgt;
+    private int src;
+    private int tgt;
+    private boolean bidi;
+    private String label = null;
 
-    public Connection(int id, String name, int parentId, NamedComponent src, NamedComponent tgt) {
+    // For connections between event boxes
+    public Connection(int id, int parentId, int src, int tgt) {
+        String name = src+"-to-"+tgt;
         super(id, name, parentId);
         this.src = src;
         this.tgt = tgt;
     }
 
-    public NamedComponent getSrc() {
-        return src;
+    // For transitions in state diagrams
+    public Connection(int id, String name, int parentId, int src, int tgt, String label) {
+        super(id, name, parentId);
+        this.label = label;
+        this.src = src;
+        this.tgt = tgt;
+        this.bidi = false;
     }
 
-    public NamedComponent getTgt() {
+    public Connection(int id, String label, int parentId, int src, int tgt, boolean bidi) {
+        String name = src+"-to-"+tgt;
+        super(id, name, parentId);
+        this.src = src;
+        this.tgt = tgt;
+        this.label = label;
+        this.bidi = bidi;
+    }
+
+    public int getSrc() {
+        return src;
+    }
+    public int getTgt() {
         return tgt;
+    }
+
+    public boolean isBidi() {
+        return bidi;
+    }
+    public void setBidi(boolean bidi) {
+        this.bidi = bidi;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public boolean isAsync() {
+        return label.equals("async");
+    }
+    public void makeAsync() {
+        label = "async";
     }
 }

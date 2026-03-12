@@ -2,7 +2,6 @@ package org.example.app.transformModel;
 
 import org.example.app.transformModel.connection.Connection;
 import org.example.app.transformModel.generalComps.ContextEventComponent;
-import org.example.app.transformModel.generalComps.NamedComponent;
 import org.example.app.transformModel.stm.StateMachine;
 
 import java.util.ArrayList;

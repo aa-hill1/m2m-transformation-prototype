@@ -16,4 +16,9 @@ public class NameOnlyComponent extends NamedComponent {
     public SimpleCompType getType() {
         return type;
     }
+
+    @Override
+    public void addChild(NamedComponent child) {
+        throw new RuntimeException("Cannot call for NameOnlyComponent of type" + type);
+    }
 }

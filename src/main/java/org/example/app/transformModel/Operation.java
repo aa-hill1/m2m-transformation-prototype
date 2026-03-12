@@ -9,15 +9,15 @@ public class Operation extends ContextComponent {
 
     public Operation(int id, String name) {
         super(id, name, SimpleCompType.OPERATION);
-        stateMachine = new StmBody(id+1, "name", id); //TODO: StmBody name in Operation
+        stateMachine = new StmBody(id+1, (name+"-stmBody"), id);
     }
 
     public Operation(int id, String name, int parentId) {
         super(id, name, parentId, SimpleCompType.OPERATION);
-        stateMachine = new StmBody(id+1, "name", id); //TODO: StmBody name in Operation
+        stateMachine = new StmBody(id+1, (name+"-stmBody"), id);
     }
 
-    public StmBody getStateMachine() {
+    public StmBody getStmBody() {
         return stateMachine;
     }
 }

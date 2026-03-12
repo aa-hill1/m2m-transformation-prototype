@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class FileRead {
+public class FileRead { // TODO: FileWrite + Javadoc
     private File inputFile;
     private File outputFile;
 

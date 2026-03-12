@@ -5,7 +5,7 @@ import org.example.app.TransformEngine;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class UIController {
+public class UIController { //TODO: Finish input loop + Javadoc
 
     public UIController() {
         inputLoop();

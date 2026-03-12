@@ -5,7 +5,7 @@ import org.example.ui.UIController;
 
 import java.util.ArrayList;
 
-public class Main {
+public class Main { //TODO: app startup
     static void main() {
         //UIController ui = new UIController();
         ArrayList<String> strs = new ArrayList<>();

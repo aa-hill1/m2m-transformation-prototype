@@ -7,15 +7,15 @@ public class StateMachine extends ContextEventComponent {
 
     public StateMachine(int id, String name, int parentId) {
         super(id, name, parentId);
-        body = new StmBody(id+1,"name", id); //TODO: StmBody name in StateMachine
+        body = new StmBody(id+1,(name+"-stmBody"), id);
     }
 
     public StateMachine(int id, String name) {
         super(id, name);
-        body = new StmBody(id+1,"name", id); //TODO: StmBody name in StateMachine
+        body = new StmBody(id+1,(name+"-stmBody"), id);
     }
 
-    public StmBody getBody() {
+    public StmBody getStmBody() {
         return body;
     }
 }

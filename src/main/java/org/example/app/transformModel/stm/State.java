@@ -7,10 +7,16 @@ public class State extends NamedComponent {
     private String entryAction = null;
     private String duringAction = null;
     private String exitAction = null;
+    private StmBody stateMachine;
 
     public State(int id, String name, int parentId, boolean finalState) {
         super(id, name, parentId);
         this.finalState = finalState;
+        if (!finalState) {
+            stateMachine = new StmBody(id+1, (name+"-stmBody"), id);
+        } else {
+            stateMachine = null;
+        }
     }
 
     public boolean isFinalState() {
@@ -36,5 +42,9 @@ public class State extends NamedComponent {
     }
     public void setExitAction(String exitAction) {
         this.exitAction = exitAction;
+    }
+
+    public StmBody getStmBody() {
+        return stateMachine;
     }
 }

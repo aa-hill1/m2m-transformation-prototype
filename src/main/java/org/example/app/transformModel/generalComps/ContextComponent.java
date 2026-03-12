@@ -1,6 +1,7 @@
 package org.example.app.transformModel.generalComps;
 
 import org.example.app.transformModel.context.ContextData;
+import org.example.app.transformModel.context.ContextType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +22,25 @@ public class ContextComponent extends NameOnlyComponent {
         return context;
     }
 
+    public List<ContextData> getEvents() {
+        List<ContextData> events = new ArrayList<>();
+        for (ContextData contextLine : context) {
+            if (contextLine.getType() == ContextType.EVENT) {
+                events.add(contextLine);
+            }
+        }
+        return events;
+    }
+
     public void addContextLine(ContextData contextLine) {
         if (context.contains(contextLine)) {
             throw new RuntimeException(String.format("Cannot add context %s to component %s twice", contextLine.getName(), name));
         }
         context.add(contextLine);
+    }
+
+    @Override
+    public void addChild(NamedComponent child) {
+        return;
     }
 }
