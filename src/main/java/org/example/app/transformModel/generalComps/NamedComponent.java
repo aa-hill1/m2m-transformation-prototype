@@ -1,5 +1,8 @@
 package org.example.app.transformModel.generalComps;
 
+import java.util.List;
+import java.util.Map;
+
 public abstract class NamedComponent {
     protected int id;
     protected String name;
@@ -35,4 +38,12 @@ public abstract class NamedComponent {
     }
 
     public abstract void addChild(NamedComponent child);
+
+    public Map<String, List<NamedComponent>> getChildren() {
+        return null;
+    }
+
+    public int getContainedComponentsCount() {
+        return 0;
+    };
 }

@@ -7,7 +7,9 @@ import org.example.app.transformModel.generalComps.NamedComponent;
 import org.example.app.transformModel.stm.StateMachine;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Controller extends ContextEventComponent {
     private List<Connection> connections = new ArrayList<>();
@@ -88,5 +90,29 @@ public class Controller extends ContextEventComponent {
                     )
             );
         }
+    }
+
+    @Override
+    public Map<String, List<NamedComponent>> getChildren() {
+        Map<String, List<NamedComponent>> children = super.getChildren();
+        List<NamedComponent> componentList = new ArrayList<>(stms);
+        componentList.addAll(refs);
+        componentList.addAll(operations);
+        children.put("components", componentList);
+        List<NamedComponent> connectionList = new ArrayList<>(connections);
+        children.put("connections", connectionList);
+        return children;
+    }
+
+    @Override
+    public int getContainedComponentsCount() {
+        int count = refs.size();
+        for (StateMachine stm : stms) {
+            count += 1 + stm.getContainedComponentsCount();
+        }
+        for (Operation op : operations) {
+            count += 1 + op.getContainedComponentsCount();
+        }
+        return count;
     }
 }

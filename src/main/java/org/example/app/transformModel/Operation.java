@@ -6,6 +6,10 @@ import org.example.app.transformModel.generalComps.NamedComponent;
 import org.example.app.transformModel.generalComps.SimpleCompType;
 import org.example.app.transformModel.stm.StmBody;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Operation extends ContextComponent {
     private StmBody stateMachine;
 
@@ -30,5 +34,17 @@ public class Operation extends ContextComponent {
         } else {
             stateMachine.addChild(child);
         }
+    }
+
+    @Override
+    public Map<String, List<NamedComponent>> getChildren() {
+        Map<String, List<NamedComponent>> children = new HashMap<>();
+        children.put("components", List.of(stateMachine));
+        return children;
+    }
+
+    @Override
+    public int getContainedComponentsCount() {
+        return stateMachine.getContainedComponentsCount();
     }
 }

@@ -5,6 +5,7 @@ import org.example.app.transformModel.generalComps.ContextEventComponent;
 import org.example.app.transformModel.generalComps.NamedComponent;
 
 import java.util.List;
+import java.util.Map;
 
 public class Reference extends ContextEventComponent {
     private NamedComponent referencedObj;
@@ -62,4 +63,13 @@ public class Reference extends ContextEventComponent {
             );
         }
     }
+
+    @Override
+    public Map<String, List<NamedComponent>> getChildren() {
+        Map<String, List<NamedComponent>> children = super.getChildren();
+        children.remove("context");
+        return children;
+    }
+
+
 }

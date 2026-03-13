@@ -3,8 +3,11 @@ package org.example.app.transformModel.stm;
 import org.example.app.transformModel.connection.Connection;
 import org.example.app.transformModel.generalComps.NamedComponent;
 
+import javax.naming.Name;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StmBody extends NamedComponent {
     private List<State> states = new ArrayList<>();
@@ -67,5 +70,25 @@ public class StmBody extends NamedComponent {
                             name)
             );
         }
+    }
+
+    @Override
+    public Map<String, List<NamedComponent>> getChildren() {
+        Map<String, List<NamedComponent>> children = new HashMap<>();
+        List<NamedComponent> componentList = new ArrayList<>(states);
+        componentList.addAll(junctions);
+        List<NamedComponent> transitionList = new ArrayList<>(transitions);
+        children.put("components", componentList);
+        children.put("connections", transitionList);
+        return children;
+    }
+
+    @Override
+    public int getContainedComponentsCount() {
+        int count = junctions.size();
+        for (State state : states) {
+            count += 1 + state.getContainedComponentsCount();
+        }
+        return super.getContainedComponentsCount();
     }
 }

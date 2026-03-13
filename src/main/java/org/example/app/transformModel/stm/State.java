@@ -2,6 +2,10 @@ package org.example.app.transformModel.stm;
 
 import org.example.app.transformModel.generalComps.NamedComponent;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class State extends NamedComponent {
     private boolean finalState;
     private String entryAction = null;
@@ -59,5 +63,17 @@ public class State extends NamedComponent {
             );
         }
         stateMachine.addChild(child);
+    }
+
+    @Override
+    public Map<String, List<NamedComponent>> getChildren() {
+        Map<String, List<NamedComponent>> children = new HashMap<>();
+        children.put("components", List.of(stateMachine));
+        return children;
+    }
+
+    @Override
+    public int getContainedComponentsCount() {
+        return stateMachine.getContainedComponentsCount();
     }
 }

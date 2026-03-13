@@ -3,8 +3,7 @@ package org.example.app.transformModel.generalComps;
 import org.example.app.transformModel.context.ContextData;
 import org.example.app.transformModel.context.ContextType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class ContextComponent extends NameOnlyComponent {
     protected List<ContextData> context = new ArrayList<>();
@@ -55,5 +54,13 @@ public class ContextComponent extends NameOnlyComponent {
                             name)
             );
         }
+    }
+
+    @Override
+    public Map<String, List<NamedComponent>> getChildren() {
+        Map<String, List<NamedComponent>> children = new HashMap<>();
+        List<NamedComponent> contextList = new ArrayList<>(context);
+        children.put("context", contextList);
+        return children;
     }
 }

@@ -6,6 +6,7 @@ import org.example.app.transformModel.stm.StateMachine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RCModule extends NamedComponent {
     private List<Connection> connections = new ArrayList<>();
@@ -94,5 +95,29 @@ public class RCModule extends NamedComponent {
                     )
             );
         }
+    }
+
+    @Override
+    public Map<String, List<NamedComponent>> getChildren() {
+        Map<String, List<NamedComponent>> children = super.getChildren();
+        List<NamedComponent> componentList = new ArrayList<>(controllers);
+        componentList.addAll(operations);
+        componentList.addAll(rps);
+        componentList.addAll(stms);
+        children.put("components", componentList);
+        List<NamedComponent> connectionList = new ArrayList<>(connections);
+        children.put("connections", connectionList);
+        return children;
+    }
+
+    @Override
+    public int getContainedComponentsCount() {
+        int count = 0;
+        for (List<? extends NamedComponent> compList : List.of(controllers, operations, rps, stms)) {
+            for (NamedComponent comp : compList) {
+                count += 1 + comp.getContainedComponentsCount();
+            }
+        }
+        return count;
     }
 }

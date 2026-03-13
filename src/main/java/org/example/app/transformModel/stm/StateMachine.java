@@ -5,6 +5,9 @@ import org.example.app.transformModel.context.ContextData;
 import org.example.app.transformModel.generalComps.ContextEventComponent;
 import org.example.app.transformModel.generalComps.NamedComponent;
 
+import java.util.List;
+import java.util.Map;
+
 public class StateMachine extends ContextEventComponent {
     private StmBody body;
 
@@ -29,5 +32,17 @@ public class StateMachine extends ContextEventComponent {
         } else {
             body.addChild(child);
         }
+    }
+
+    @Override
+    public Map<String, List<NamedComponent>> getChildren() {
+        Map<String, List<NamedComponent>> children = super.getChildren();
+        children.put("components", List.of(body));
+        return children;
+    }
+
+    @Override
+    public int getContainedComponentsCount() {
+        return body.getContainedComponentsCount();
     }
 }

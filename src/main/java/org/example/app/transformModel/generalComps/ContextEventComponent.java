@@ -4,7 +4,9 @@ import org.example.app.transformModel.EventBox;
 import org.example.app.transformModel.context.ContextData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class ContextEventComponent extends NamedComponent {
     protected List<ContextData> context = new ArrayList<>();
@@ -65,5 +67,15 @@ public abstract class ContextEventComponent extends NamedComponent {
                             name)
             );
         }
+    }
+
+    @Override
+    public Map<String, List<NamedComponent>> getChildren() {
+        Map<String, List<NamedComponent>> children = new HashMap<>();
+        List<NamedComponent> contextList = new ArrayList<>(context);
+        List<NamedComponent> eventBoxList = new ArrayList<>(eventBoxes);
+        children.put("context", contextList);
+        children.put("eventBox", eventBoxList);
+        return children;
     }
 }
