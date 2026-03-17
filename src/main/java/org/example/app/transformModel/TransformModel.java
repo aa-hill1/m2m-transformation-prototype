@@ -43,4 +43,15 @@ public class TransformModel { //TODO: Javadoc
     public List<NamedComponent> getRootComps() {
         return rootComps;
     }
+
+    public NamedComponent getOpByName(String nameToFind) {
+        for (String compName : compNameMap.keySet()) {
+            if (compName.contains("(") && compName.contains(")")) {
+                if (compName.substring(0, compName.indexOf('(')).equals(nameToFind)) {
+                    return compNameMap.get(compName);
+                }
+            }
+        }
+        throw new RuntimeException("Cannot find operation with name " + nameToFind);
+    }
 }

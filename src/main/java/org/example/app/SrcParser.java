@@ -59,7 +59,10 @@ public class SrcParser {
                 offset = factory.createState(data.get(i+1), true);
                 break;
             case "rref", "cref", "sref":
-                offset = factory.createRef(data.get(i+1), data.get(i+3));
+                offset = factory.createRef(data.get(i+1), data.get(i+3), false);
+                break;
+            case "opref":
+                offset = factory.createRef(data.get(i+1), data.get(i+3), true);
                 break;
             case "module", "stm", "interface", "controller":
                 offset = factory.createModConIntRpStm(data.get(i+1), pattern);
