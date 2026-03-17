@@ -1,6 +1,8 @@
 package org.example.app.transformModel;
 
+import org.example.app.transformModel.connection.EventBox;
 import org.example.app.transformModel.context.ContextData;
+import org.example.app.transformModel.generalComps.ComplexCompType;
 import org.example.app.transformModel.generalComps.ContextEventComponent;
 import org.example.app.transformModel.generalComps.NamedComponent;
 
@@ -11,26 +13,24 @@ public class Reference extends ContextEventComponent {
     private NamedComponent referencedObj;
 
     public Reference(int id, String name, int parentId, NamedComponent referencedObj) {
-        super(id, name, parentId);
+        super(id, name, parentId, ComplexCompType.REF);
         this.referencedObj = referencedObj;
         context = null;
     }
 
     public Reference(int id, String name, NamedComponent referencedObj) {
-        super(id, name);
+        super(id, name, ComplexCompType.REF);
         this.referencedObj = referencedObj;
         context = null;
     }
 
     public List<EventBox> createEventBoxes() {
-        if (!(referencedObj instanceof Operation)) {
-            List<EventBox> refEventBoxes = ((ContextEventComponent) referencedObj).getEventBoxes();
-            int currentId = id + 1;
-            for (EventBox refBox : refEventBoxes) {
-                EventBox newBox = new EventBox(currentId, (name + refBox.getName()), id, refBox.getEvent());
-                this.addEventBox(newBox);
-                currentId++;
-            }
+        List<EventBox> refEventBoxes = ((ContextEventComponent) referencedObj).getEventBoxes();
+        int currentId = id + 1;
+        for (EventBox refBox : refEventBoxes) {
+            EventBox newBox = new EventBox(currentId, refBox.getName(), id);
+            this.addEventBox(newBox);
+            currentId++;
         }
         return this.getEventBoxes();
     }

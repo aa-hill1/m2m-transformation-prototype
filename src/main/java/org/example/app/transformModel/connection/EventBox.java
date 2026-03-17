@@ -1,27 +1,19 @@
-package org.example.app.transformModel;
+package org.example.app.transformModel.connection;
 
 import org.example.app.transformModel.context.ContextData;
 import org.example.app.transformModel.context.ContextType;
 import org.example.app.transformModel.generalComps.NamedComponent;
 
 public class EventBox extends NamedComponent {
-    private ContextData event;
+    private String eventName;
 
-    public EventBox(int id, String name, int parentId, ContextData event) {
-        super(id, event.getName(), parentId);
-        if (event.getType() != ContextType.EVENT) {
-            throw new RuntimeException("Event box" + name +
-                    " cannot reference "+ event.getName() +" of type " + event.getType());
-        }
-        this.event = event;
-    }
-
-    public ContextData getEvent() {
-        return event;
+    public EventBox(int id, String name, int parentId) {
+        super(id, name, parentId);
+        this.eventName = name.split(" ")[0];
     }
 
     public String getEventName() {
-        return name.split(" ")[0];
+        return eventName;
     }
 
     @Override

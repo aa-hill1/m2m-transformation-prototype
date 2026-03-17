@@ -1,28 +1,29 @@
 package org.example.app.transformModel;
 
 import org.example.app.transformModel.connection.Connection;
+import org.example.app.transformModel.connection.EventBox;
 import org.example.app.transformModel.context.ContextData;
+import org.example.app.transformModel.generalComps.ComplexCompType;
 import org.example.app.transformModel.generalComps.ContextEventComponent;
 import org.example.app.transformModel.generalComps.NamedComponent;
-import org.example.app.transformModel.stm.StateMachine;
+import org.example.app.transformModel.generalComps.StmComponent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Controller extends ContextEventComponent {
     private List<Connection> connections = new ArrayList<>();
-    private List<StateMachine> stms = new ArrayList<>();
+    private List<StmComponent> stms = new ArrayList<>();
     private List<Reference> refs = new ArrayList<>();
-    private List<Operation> operations = new ArrayList<>();
+    private List<StmComponent> operations = new ArrayList<>();
 
     public Controller(int id, String name) {
-        super(id, name);
+        super(id, name, ComplexCompType.CONTROLLER);
     }
 
     public Controller(int id, String name, int parentId) {
-        super(id, name, parentId);
+        super(id, name, parentId, ComplexCompType.CONTROLLER);
     }
 
     public List<Connection> getConnections() {
@@ -36,10 +37,10 @@ public class Controller extends ContextEventComponent {
         connections.add(connection);
     }
 
-    public List<StateMachine> getStms() {
+    public List<StmComponent> getStms() {
         return stms;
     }
-    public void addStm(StateMachine stm) {
+    public void addStm(StmComponent stm) {
         if (stms.contains(stm)) {
             throw new RuntimeException(
                     String.format("Cannot add STM %s to controller %s twice", stm.getName(), name));
@@ -58,10 +59,10 @@ public class Controller extends ContextEventComponent {
         refs.add(ref);
     }
 
-    public List<Operation> getOperations() {
+    public List<StmComponent> getOperations() {
         return operations;
     }
-    public void addOperation(Operation operation) {
+    public void addOperation(StmComponent operation) {
         if (operations.contains(operation)) {
             throw new RuntimeException(
                     String.format("Cannot add operation %s to controller %s twice", operation.getName(), name));
@@ -75,12 +76,14 @@ public class Controller extends ContextEventComponent {
             super.addChild(child);
         } else if (child instanceof Connection) {
             addConnection((Connection) child);
-        } else if (child instanceof StateMachine) {
-            addStm((StateMachine) child);
         } else if (child instanceof Reference) {
             addRef((Reference) child);
-        } else if (child instanceof Operation) {
-            addOperation((Operation) child);
+        } else if (child instanceof StmComponent) {
+            if (((StmComponent) child).getType() == ComplexCompType.STM) {
+                addStm((StmComponent) child);
+            } else if (((StmComponent) child).getType() == ComplexCompType.OPERATION) {
+                addOperation((StmComponent) child);
+            }
         } else {
             throw new RuntimeException(
                     String.format(
@@ -107,10 +110,10 @@ public class Controller extends ContextEventComponent {
     @Override
     public int getContainedComponentsCount() {
         int count = refs.size();
-        for (StateMachine stm : stms) {
+        for (StmComponent stm : stms) {
             count += 1 + stm.getContainedComponentsCount();
         }
-        for (Operation op : operations) {
+        for (StmComponent op : operations) {
             count += 1 + op.getContainedComponentsCount();
         }
         return count;

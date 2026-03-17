@@ -1,28 +1,31 @@
-package org.example.app.transformModel.stm;
+package org.example.app.transformModel.generalComps;
 
-import org.example.app.transformModel.EventBox;
+import org.example.app.transformModel.connection.EventBox;
 import org.example.app.transformModel.context.ContextData;
-import org.example.app.transformModel.generalComps.ContextEventComponent;
-import org.example.app.transformModel.generalComps.NamedComponent;
+import org.example.app.transformModel.stm.StmBody;
 
 import java.util.List;
 import java.util.Map;
 
-public class StateMachine extends ContextEventComponent {
-    private StmBody body;
+public class StmComponent extends ContextEventComponent {
+    protected StmBody body;
 
-    public StateMachine(int id, String name, int parentId) {
-        super(id, name, parentId);
+    public StmComponent(int id, String name, ComplexCompType type) {
+        super(id, name, type);
         body = new StmBody(id+1,(name+"-stmBody"), id);
     }
 
-    public StateMachine(int id, String name) {
-        super(id, name);
+    public StmComponent(int id, String name, int parentId, ComplexCompType type) {
+        super(id, name, parentId, type);
         body = new StmBody(id+1,(name+"-stmBody"), id);
     }
 
-    public StmBody getStmBody() {
+    public StmBody getBody() {
         return body;
+    }
+
+    public ComplexCompType getType() {
+        return type;
     }
 
     @Override

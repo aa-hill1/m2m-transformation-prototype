@@ -1,8 +1,10 @@
 package org.example.app.transformModel;
 
 import org.example.app.transformModel.connection.Connection;
+import org.example.app.transformModel.generalComps.ComplexCompType;
+import org.example.app.transformModel.generalComps.ContextEventComponent;
 import org.example.app.transformModel.generalComps.NamedComponent;
-import org.example.app.transformModel.stm.StateMachine;
+import org.example.app.transformModel.generalComps.StmComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +13,9 @@ import java.util.Map;
 public class RCModule extends NamedComponent {
     private List<Connection> connections = new ArrayList<>();
     private List<Controller> controllers = new ArrayList<>();
-    private List<Operation> operations = new ArrayList<>();
-    private List<RoboticPlatform> rps = new ArrayList<>();
-    private List<StateMachine> stms = new ArrayList<>();
+    private List<StmComponent> operations = new ArrayList<>();
+    private List<ContextEventComponent> rps = new ArrayList<>();
+    private List<StmComponent> stms = new ArrayList<>();
 
     public RCModule(int id, String name) {
         super(id, name);
@@ -41,10 +43,10 @@ public class RCModule extends NamedComponent {
         controllers.add(controller);
     }
 
-    public List<Operation> getOperations() {
+    public List<StmComponent> getOperations() {
         return operations;
     }
-    public void addOperation(Operation operation) {
+    public void addOperation(StmComponent operation) {
         if (operations.contains(operation)) {
             throw new RuntimeException(
                     String.format("Cannot add operation %s to module %s twice", operation.getName(), name));
@@ -52,10 +54,10 @@ public class RCModule extends NamedComponent {
         operations.add(operation);
     }
 
-    public List<RoboticPlatform> getRps() {
+    public List<ContextEventComponent> getRps() {
         return rps;
     }
-    public void addRP(RoboticPlatform rp) {
+    public void addRP(ContextEventComponent rp) {
         if (rps.contains(rp)) {
             throw new RuntimeException(
                     String.format("Cannot add RP %s to module %s twice", rp.getName(), name));
@@ -63,10 +65,10 @@ public class RCModule extends NamedComponent {
         rps.add(rp);
     }
 
-    public List<StateMachine> getStms() {
+    public List<StmComponent> getStms() {
         return stms;
     }
-    public void addSTM(StateMachine stm) {
+    public void addSTM(StmComponent stm) {
         if (stms.contains(stm)) {
             throw new RuntimeException(
                     String.format("Cannot add STM %s to module %s twice", stm.getName(), name));
@@ -80,12 +82,16 @@ public class RCModule extends NamedComponent {
             addConnection((Connection) child);
         } else if (child instanceof Controller) {
             addController((Controller) child);
-        } else if (child instanceof Operation) {
-            addOperation((Operation) child);
-        } else if (child instanceof RoboticPlatform) {
-            addRP((RoboticPlatform) child);
-        } else if (child instanceof StateMachine) {
-            addSTM((StateMachine) child);
+        } else if (child instanceof StmComponent) {
+            if (((StmComponent) child).getType() == ComplexCompType.OPERATION) {
+                addOperation((StmComponent) child);
+            } else if (((StmComponent) child).getType() == ComplexCompType.STM) {
+                addSTM((StmComponent) child);
+            }
+        } else if (
+                child instanceof ContextEventComponent
+                        && ((ContextEventComponent) child).getType() == ComplexCompType.RP) {
+            addRP((ContextEventComponent) child);
         } else {
             throw new RuntimeException(
                     String.format(

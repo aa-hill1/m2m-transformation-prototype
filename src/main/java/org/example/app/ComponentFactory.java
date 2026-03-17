@@ -2,6 +2,7 @@ package org.example.app;
 
 import org.example.app.transformModel.*;
 import org.example.app.transformModel.connection.Connection;
+import org.example.app.transformModel.connection.EventBox;
 import org.example.app.transformModel.context.ContextData;
 import org.example.app.transformModel.context.ContextType;
 import org.example.app.transformModel.context.DefInterfaceRef;
@@ -86,6 +87,7 @@ public class ComponentFactory {
         nextId++;
         return (nextId-1);
     }
+
     /**
      * Updates {@code nextID} to account for the simultaneous instantiation of several components.
      * @param compsMade
@@ -238,12 +240,12 @@ public class ComponentFactory {
                         SimpleCompType.RCINTERFACE);
                 break;
             case "stm":
-                component = new StateMachine(this.useNextId(), name, parentStack.peek());
+                component = new StmComponent(this.useNextId(), name, parentStack.peek(), ComplexCompType.STM);
                 this.incrementNextId(1); // For StmBody within STM.
-                updateModel(((StateMachine) component).getStmBody());
+                updateModel(((StmComponent) component).getBody());
                 break;
             default:
-                component = new RoboticPlatform(this.useNextId(), name, parentStack.peek());
+                component = new ContextEventComponent(this.useNextId(), name, parentStack.peek(), ComplexCompType.RP);
                 offsetToReturn = 4;
         }
         updateModel(component);
@@ -280,7 +282,7 @@ public class ComponentFactory {
         updateModel(state);
         if (!isFinal) {
             this.incrementNextId(1); // For StmBody within state.
-            updateModel(state.getStmBody());
+            updateModel(state.getBody());
             this.pushToParentStack(state.getId());
             offset = 3;
         }
@@ -299,16 +301,20 @@ public class ComponentFactory {
         if (data.subList(nameEnd, formatter.findStringIndex(nameEnd+1, "}")).contains("terminates")) {
             name += " [terminates]";
         }
-        Operation operation = new Operation(this.useNextId(), name, parentStack.peek());
+        StmComponent operation = new StmComponent(
+                this.useNextId(),
+                name,
+                parentStack.peek(),
+                ComplexCompType.OPERATION);
         updateModel(operation);
-        updateModel(operation.getStmBody());
+        updateModel(operation.getBody());
         this.incrementNextId(1); //For StmBody within operation.
         this.pushToParentStack(operation.getId());
         return 1 + (nameEnd-start);
     }
 
     /**
-     * Creates an Event context row, adding an EventBox to the parent if required, and updates TransformModel.
+     * Creates an Event context row, EventBox or both if required, and updates TransformModel.
      * @param start
      * int pointing to the index of the start of the component's name.
      * @return offset to increment parser to starting index of next component.
@@ -322,9 +328,12 @@ public class ComponentFactory {
         } else {
             name = data.get(start);
         }
-        ContextData event = new ContextData(this.useNextId(), name, parentStack.peek(), ContextType.EVENT);
-        createEventBoxForParent(event, model.getCompById(event.getParentId()));
-        updateModel(event);
+        if (model.getCompById(parentStack.peek()) instanceof ContextComponent) {
+            ContextData event = new ContextData(this.useNextId(), name, parentStack.peek(), ContextType.EVENT);
+            updateModel(event);
+        } else {
+            createEventBoxForParent(name, model.getCompById(parentStack.peek()));
+        }
         return offset;
     }
 
@@ -343,7 +352,7 @@ public class ComponentFactory {
             ContextComponent referencedInterface = (ContextComponent) model.getCompByName(name);
             component = new DefInterfaceRef(this.useNextId(), name, parentStack.peek(), referencedInterface);
             for (ContextData event : referencedInterface.getEvents()) {
-                createEventBoxForParent(event, model.getCompById(component.getParentId()));
+                createEventBoxForParent(event.getName(), model.getCompById(component.getParentId()));
             }
         } else {
             component = new ContextData(this.useNextId(), name, parentStack.peek(), type);
@@ -410,7 +419,8 @@ public class ComponentFactory {
     }
 
     /**
-     * Creates a String to represent the Action of a State and updates TransformModel.
+     * Creates a ContextData instance of type ContextType.TEXT to represent the Action of a State and
+     * updates TransformModel.
      * @param start
      * int pointing to the index of the start of the component name.
      * @param type
@@ -421,18 +431,9 @@ public class ComponentFactory {
         int end = formatter.findStringIndex(start,
                 List.of("entry", "during", "exit", "state", "final", "initial", "probabilistic",
                         "junction", "transition"));
-        String action = type + " " + formatter.buildString(start, end, List.of(',', ';'));
-        State parent = (State) model.getCompById(parentStack.peek());
-        switch (type) {
-            case "entry":
-                parent.setEntryAction(action);
-                break;
-            case "during":
-                parent.setDuringAction(action);
-                break;
-            default:
-                parent.setExitAction(action);
-        }
+        String name = type + " " + formatter.buildString(start, end, List.of(',', ';'));
+        ContextData action = new ContextData(this.useNextId(), name, parentStack.peek(), ContextType.TEXT);
+        updateModel(action);
         return 1 + (end-start);
     }
 
@@ -501,14 +502,14 @@ public class ComponentFactory {
 
     /**
      *Check if parent requires an EventBox for the event and add one if needed.
-     * @param event
-     * ContextData of event that may need an EventBox.
+     * @param eventName
+     * String representing name of event that may need an EventBox.
      * @param parent
      * NamedComponent representing parent to add EventBox to.
      */
-    private void createEventBoxForParent(ContextData event, NamedComponent parent) {
+    private void createEventBoxForParent(String eventName, NamedComponent parent) {
         if (parent instanceof ContextEventComponent) {
-            EventBox eventBox = new EventBox(this.useNextId(), event.getName(), event.getId(), event);
+            EventBox eventBox = new EventBox(this.useNextId(), eventName, parent.getId());
             pushToParentStack(parent.getId());
             updateModel(eventBox);
             attemptPopParentStack();
@@ -595,16 +596,8 @@ public class ComponentFactory {
      * @return int representing ID of the StmBody within the current parent component.
      */
     private int getStmBodyParentID() {
-        NamedComponent parentComponent = model.getCompById(parentStack.peek());
-        int stmBodyId;
-        if (parentComponent instanceof Operation) {
-            stmBodyId = ((Operation) parentComponent).getStmBody().getId();
-        } else if (parentComponent instanceof State) {
-            stmBodyId = ((State) parentComponent).getStmBody().getId();
-        } else {
-            stmBodyId = ((StateMachine) parentComponent).getStmBody().getId();
-        }
-        return stmBodyId;
+        StmComponent parentComponent = (StmComponent) model.getCompById(parentStack.peek());
+        return parentComponent.getBody().getId();
     }
 
     private class StringFormatting {

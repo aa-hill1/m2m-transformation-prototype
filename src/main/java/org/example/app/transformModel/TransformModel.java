@@ -1,5 +1,6 @@
 package org.example.app.transformModel;
 
+import org.example.app.transformModel.connection.EventBox;
 import org.example.app.transformModel.context.ContextData;
 import org.example.app.transformModel.generalComps.NamedComponent;
 

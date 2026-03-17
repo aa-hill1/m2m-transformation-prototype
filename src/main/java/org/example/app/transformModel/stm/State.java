@@ -1,55 +1,57 @@
 package org.example.app.transformModel.stm;
 
+import org.example.app.transformModel.connection.EventBox;
+import org.example.app.transformModel.context.ContextData;
+import org.example.app.transformModel.context.ContextType;
 import org.example.app.transformModel.generalComps.NamedComponent;
+import org.example.app.transformModel.generalComps.ComplexCompType;
+import org.example.app.transformModel.generalComps.StmComponent;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class State extends NamedComponent {
+public class State extends StmComponent {
     private boolean finalState;
-    private String entryAction = null;
-    private String duringAction = null;
-    private String exitAction = null;
-    private StmBody stateMachine;
 
     public State(int id, String name, int parentId, boolean finalState) {
-        super(id, name, parentId);
+        super(id, name, parentId, ComplexCompType.STATE);
         this.finalState = finalState;
         if (!finalState) {
-            stateMachine = new StmBody(id+1, (name+"-stmBody"), id);
+            body = new StmBody(id+1, (name+"-stmBody"), id);
         } else {
-            stateMachine = null;
+            body = null;
+            context = null;
         }
+        eventBoxes = null;
     }
 
     public boolean isFinalState() {
         return finalState;
     }
 
-    public String getEntryAction() {
-        return entryAction;
-    }
-    public void setEntryAction(String entryAction) {
-        this.entryAction = entryAction;
-    }
-
-    public String getDuringAction() {
-        return duringAction;
-    }
-    public void setDuringAction(String duringAction) {
-        this.duringAction = duringAction;
-    }
-
-    public String getExitAction() {
-        return exitAction;
-    }
-    public void setExitAction(String exitAction) {
-        this.exitAction = exitAction;
+    @Override
+    public void addContextLine(ContextData contextLine) {
+        if (finalState) {
+            throw new RuntimeException("Cannot add context to a final state");
+        }
+        if (contextLine.getType() != ContextType.TEXT) {
+            throw new RuntimeException(
+                    String.format(
+                            "Cannot add context %s to %s, must an Action of type ContextType.TEXT",
+                            contextLine.getName(),
+                            name));
+        }
+        super.addContextLine(contextLine);
     }
 
-    public StmBody getStmBody() {
-        return stateMachine;
+    @Override
+    public EventBox getEventBoxWithName(String name) {
+        throw new RuntimeException("Cannot get event box from state " + name);
+    }
+
+    @Override
+    public void addEventBox(EventBox eventBox) {
+        throw new RuntimeException("Cannot add event box to component of type state");
     }
 
     @Override
@@ -61,19 +63,28 @@ public class State extends NamedComponent {
                     child.getName(),
                     name)
             );
+        } else if (child instanceof EventBox) {
+            addEventBox((EventBox) child);
+        } else if (child instanceof ContextData) {
+            addContextLine((ContextData) child);
+        } else {
+            body.addChild(child);
         }
-        stateMachine.addChild(child);
     }
 
     @Override
     public Map<String, List<NamedComponent>> getChildren() {
-        Map<String, List<NamedComponent>> children = new HashMap<>();
-        children.put("components", List.of(stateMachine));
-        return children;
+        if (finalState) {
+            return null;
+        }
+        return super.getChildren();
     }
 
     @Override
     public int getContainedComponentsCount() {
-        return stateMachine.getContainedComponentsCount();
+        if (finalState) {
+            return 0;
+        }
+        return super.getContainedComponentsCount();
     }
 }

@@ -6,7 +6,6 @@ public enum SimpleCompType {
     ENUMERATION,
     RCINTERFACE,
     FUNCTION,
-    OPERATION,
     TYPE_DEC,
     RCPACKAGE
 }

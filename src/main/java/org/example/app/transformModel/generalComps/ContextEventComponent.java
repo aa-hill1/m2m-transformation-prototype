@@ -1,6 +1,6 @@
 package org.example.app.transformModel.generalComps;
 
-import org.example.app.transformModel.EventBox;
+import org.example.app.transformModel.connection.EventBox;
 import org.example.app.transformModel.context.ContextData;
 
 import java.util.ArrayList;
@@ -8,16 +8,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class ContextEventComponent extends NamedComponent {
+public class ContextEventComponent extends NamedComponent {
+    protected ComplexCompType type;
     protected List<ContextData> context = new ArrayList<>();
     protected List<EventBox> eventBoxes = new ArrayList<>();
 
-    public ContextEventComponent(int id, String name) {
+    public ContextEventComponent(int id, String name, ComplexCompType type) {
         super(id, name);
+        this.type = type;
     }
 
-    public ContextEventComponent(int id, String name, int parentId) {
+    public ContextEventComponent(int id, String name, int parentId, ComplexCompType type) {
         super(id, name, parentId);
+        this.type = type;
+    }
+
+    public ComplexCompType getType() {
+        return type;
     }
 
     public List<ContextData> getContext() {
