@@ -63,6 +63,7 @@ public class TgtGenerator {
     public String translate() {
         List<NamedComponent> compsToProcess = new ArrayList<>(model.getRootComps());
         pushToStacks(compsToProcess.size());
+        data.append(factory.assembleStart());
         while (!compsToProcess.isEmpty()) {
             NamedComponent current = compsToProcess.getFirst();
             if (!(current instanceof StmBody)) {
@@ -79,6 +80,7 @@ public class TgtGenerator {
                 }
             }
         }
+        data.append(factory.assembleEnd());
         return data.toString();
     }
 

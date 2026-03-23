@@ -17,10 +17,17 @@ import java.util.List;
 
 public class CellFactory {
 
+    public String assembleStart() {
+        return XmlTemplates.getStartBase();
+    }
+    public String assembleEnd() {
+        return XmlTemplates.getEndBase();
+    }
+
     // Package/TypeDec
     public String assembleNameOnlyComp(NameOnlyComponent component, String[] coords) {
         String[] template =
-                (component.getType() == SimpleCompType.TYPE_DEC)? XmlTemplates.TYPE_DEC : XmlTemplates.PACKAGE;
+                (component.getType() == SimpleCompType.TYPE_DEC)? XmlTemplates.getTypeDec() : XmlTemplates.getPackage();
         String[] data = {
                 String.valueOf(component.getId()),
                 component.getName(),
@@ -49,11 +56,11 @@ public class CellFactory {
         }
         String[] template;
         switch (component.getType()) {
-            case IMPORTS -> template = XmlTemplates.IMPORTS;
-            case ENUMERATION -> template = XmlTemplates.ENUM;
-            case RECORD -> template = XmlTemplates.RECORD;
-            case FUNCTION -> template = XmlTemplates.FUNCTION;
-            default -> template = XmlTemplates.INTERFACE;
+            case IMPORTS -> template = XmlTemplates.getImports();
+            case ENUMERATION -> template = XmlTemplates.getEnum();
+            case RECORD -> template = XmlTemplates.getRecord();
+            case FUNCTION -> template = XmlTemplates.getFunction();
+            default -> template = XmlTemplates.getInterface();
         }
         return createCell(template, data) + createContext(component.getContext(), String.valueOf(component.getId()));
     }
@@ -68,18 +75,13 @@ public class CellFactory {
                 String.valueOf(module.getId()),
                 module.getId() + "-0"
         };
-        return createCell(XmlTemplates.MODULE, data) +
+        return createCell(XmlTemplates.getModule(), data) +
                 createConnections(module.getConnections());
     }
 
     // Junction
     public String assembleJunction(Junction junction, String[] coords) {
-        String[] template;
-        switch (junction.getType()) {
-            case DEFAULT -> template = XmlTemplates.JUNCTION;
-            case INITIAL -> template = XmlTemplates.INITIAL_JUNCTION;
-            default -> template = XmlTemplates.PROB_JUNCTION;
-        }
+        String[] template = XmlTemplates.getJunction(junction.getType());
         String[] data = {
                 String.valueOf(junction.getId()),
                 String.valueOf(junction.getParentId()),
@@ -93,10 +95,10 @@ public class CellFactory {
     public String assembleRef(Reference ref, String[] coords) {
         String[] template;
         switch (ref.getReferencedObj().getType()) {
-            case RP -> template = XmlTemplates.RP_REF;
-            case OPERATION -> template = XmlTemplates.OP_REF;
-            case CONTROLLER -> template = XmlTemplates.CONTROLLER_REF;
-            default -> template = XmlTemplates.STM_REF;
+            case RP -> template = XmlTemplates.getRp(false);
+            case OPERATION -> template = XmlTemplates.getOperation(false);
+            case CONTROLLER -> template = XmlTemplates.getController(false);
+            default -> template = XmlTemplates.getStm(false);
         }
         String[] data = {
                 String.valueOf(ref.getId()),
@@ -116,10 +118,10 @@ public class CellFactory {
         float multiplier;
         if (component.getType() == ComplexCompType.CONTROLLER) {
             connections = createConnections(((Controller) component).getConnections());
-            template = XmlTemplates.CONTROLLER_DEF;
+            template = XmlTemplates.getController(true);
             multiplier = component.getContainedComponentsCount();
         } else {
-            template = XmlTemplates.RP_DEF;
+            template = XmlTemplates.getRp(true);
             multiplier = 0.94f;
         }
         String[] data = {
@@ -146,7 +148,7 @@ public class CellFactory {
         String[] data;
         String dataToReturn;
         if (state.isFinalState()) {
-            template = XmlTemplates.FINAL_STATE;
+            template = XmlTemplates.getState(true);
             data = new String[]{
                     String.valueOf(state.getId()),
                     String.valueOf(state.getParentId()),
@@ -155,7 +157,7 @@ public class CellFactory {
             };
             dataToReturn = createCell(template, data);
         } else {
-            template = XmlTemplates.STATE;
+            template = XmlTemplates.getState(false);
             data = new String[]{
                     String.valueOf(state.getId()),
                     String.valueOf(state.getParentId()),
@@ -175,7 +177,8 @@ public class CellFactory {
     // OpDef/StmDef
     public String assembleOpStmDef(StmComponent component, String[] coords) {
         String[] template =
-                (component.getType() == ComplexCompType.STM)? XmlTemplates.STM_DEF : XmlTemplates.OP_DEF;
+                (component.getType() == ComplexCompType.STM)?
+                        XmlTemplates.getStm(true) : XmlTemplates.getOperation(true);
         String[] data = {
                 String.valueOf(component.getId()),
                 String.valueOf(component.getParentId()),
@@ -198,7 +201,7 @@ public class CellFactory {
     public String createEventBoxes(List<EventBox> boxes, String parentID, float multiplier) {
         String estimatedXVal = String.valueOf(Math.round(multiplier * 160));
         String y = "0";
-        String[] template = XmlTemplates.EVENT_BOX;
+        String[] template = XmlTemplates.getEventBox();
         StringBuilder dataToReturn = new StringBuilder();
         for (EventBox box : boxes) {
             String[] data = {
@@ -226,16 +229,13 @@ public class CellFactory {
                     String.valueOf(connection.getId()),
                     connection.getLabel()
             ));
-            String[] template;
+            String[] template = XmlTemplates.getConnection(connection.isBidi());
             if (!connection.isBidi()) {
-                template = XmlTemplates.CONNECTION;
                 String fontstyle = "0";
                 if (connection.isAsync()) {
                     fontstyle = "2";
                 }
                 data.add(5, fontstyle);
-            } else {
-                template = XmlTemplates.BIDI_CONNECTION;
             }
             dataToReturn.append(createCell(template, data.toArray(new String[0])));
         }
@@ -260,17 +260,17 @@ public class CellFactory {
     private String[] getContextTemplate(ContextType type) {
         String[] template;
         switch (type) {
-            case TEXT -> template = XmlTemplates.TEXT_ROW;
-            case VAR -> template = XmlTemplates.VAR;
-            case CLOCK -> template = XmlTemplates.CLOCK;
-            case EVENT -> template = XmlTemplates.EVENT;
-            case OP_SIG -> template = XmlTemplates.OP_SIG;
-            case CONSTANT -> template = XmlTemplates.CONSTANT;
-            case D_INTERFACE -> template = XmlTemplates.DEF_INTERFACE;
-            case P_INTERFACE -> template = XmlTemplates.PROV_INTERFACE;
-            case R_INTERFACE -> template = XmlTemplates.REQ_INTERFACE;
-            case PRECONDITION -> template = XmlTemplates.PRECONDITION;
-            default -> template = XmlTemplates.POSTCONDITION;
+            case TEXT -> template = XmlTemplates.getTextRow();
+            case VAR -> template = XmlTemplates.getVar();
+            case CLOCK -> template = XmlTemplates.getClock();
+            case EVENT -> template = XmlTemplates.getEvent();
+            case OP_SIG -> template = XmlTemplates.getOpSig();
+            case CONSTANT -> template = XmlTemplates.getConstant();
+            case D_INTERFACE -> template = XmlTemplates.getInterfaceRef(type);
+            case P_INTERFACE -> template = XmlTemplates.getInterfaceRef(type);
+            case R_INTERFACE -> template = XmlTemplates.getInterfaceRef(type);
+            case PRECONDITION -> template = XmlTemplates.getPrecondition();
+            default -> template = XmlTemplates.getPostcondition();
         }
         return template;
     }
