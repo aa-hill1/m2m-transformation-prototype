@@ -6,7 +6,7 @@ public class Connection  extends NamedComponent {
     private int src;
     private int tgt;
     private boolean bidi;
-    private String label = null;
+    private String label;
 
     // For connections between event boxes
     public Connection(int id, int parentId, int src, int tgt) {
@@ -14,6 +14,7 @@ public class Connection  extends NamedComponent {
         super(id, name, parentId);
         this.src = src;
         this.tgt = tgt;
+        label = "";
     }
 
     // For transitions in state diagrams

@@ -10,22 +10,22 @@ import java.util.List;
 import java.util.Map;
 
 public class Reference extends ContextEventComponent {
-    private NamedComponent referencedObj;
+    private ContextEventComponent referencedObj;
 
-    public Reference(int id, String name, int parentId, NamedComponent referencedObj) {
+    public Reference(int id, String name, int parentId, ContextEventComponent referencedObj) {
         super(id, name, parentId, ComplexCompType.REF);
         this.referencedObj = referencedObj;
         context = null;
     }
 
-    public Reference(int id, String name, NamedComponent referencedObj) {
+    public Reference(int id, String name, ContextEventComponent referencedObj) {
         super(id, name, ComplexCompType.REF);
         this.referencedObj = referencedObj;
         context = null;
     }
 
     public List<EventBox> createEventBoxes() {
-        List<EventBox> refEventBoxes = ((ContextEventComponent) referencedObj).getEventBoxes();
+        List<EventBox> refEventBoxes = referencedObj.getEventBoxes();
         int currentId = id + 1;
         for (EventBox refBox : refEventBoxes) {
             EventBox newBox = new EventBox(currentId, refBox.getName(), id);
@@ -35,7 +35,7 @@ public class Reference extends ContextEventComponent {
         return this.getEventBoxes();
     }
 
-    public NamedComponent getReferencedObj() {
+    public ContextEventComponent getReferencedObj() {
         return referencedObj;
     }
 
@@ -70,6 +70,5 @@ public class Reference extends ContextEventComponent {
         children.remove("context");
         return children;
     }
-
 
 }

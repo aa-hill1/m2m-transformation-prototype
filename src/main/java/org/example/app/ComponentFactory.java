@@ -206,7 +206,9 @@ public class ComponentFactory {
      * @return 4 (offset to increment parser to starting index of next component).
      */
     public int createRef(String name, String defName, boolean opRef) {
-        NamedComponent referencedObj = (opRef)? model.getOpByName(defName) : model.getCompByName(defName);
+        ContextEventComponent referencedObj = (opRef)?
+                (ContextEventComponent) model.getOpByName(defName) :
+                (ContextEventComponent) model.getCompByName(defName);
         Reference ref = new Reference(this.useNextId(), name, parentStack.peek(), referencedObj);
         this.incrementNextId(ref.createEventBoxes().size());
         updateModel(ref);

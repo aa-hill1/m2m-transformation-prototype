@@ -89,6 +89,6 @@ public class StmBody extends NamedComponent {
         for (State state : states) {
             count += 1 + state.getContainedComponentsCount();
         }
-        return super.getContainedComponentsCount();
+        return count;
     }
 }
