@@ -1,4 +1,4 @@
-package org.example.app;
+package org.example.app.tgt;
 
 import org.example.app.transformModel.Controller;
 import org.example.app.transformModel.RCModule;
@@ -17,31 +17,34 @@ import java.util.List;
 
 public class CellFactory {
 
-    public String assembleNameOnlyComp(NameOnlyComponent component, int[] coords, boolean typeDec) {
-        String[] template = (typeDec)? XmlTemplates.TYPE_DEC : XmlTemplates.PACKAGE;
+    // Package/TypeDec
+    public String assembleNameOnlyComp(NameOnlyComponent component, String[] coords) {
+        String[] template =
+                (component.getType() == SimpleCompType.TYPE_DEC)? XmlTemplates.TYPE_DEC : XmlTemplates.PACKAGE;
         String[] data = {
                 String.valueOf(component.getId()),
                 component.getName(),
-                String.valueOf(coords[0]),
-                String.valueOf(coords[1])
+                coords[0],
+                coords[1]
         };
         return createCell(template, data);
     }
 
-    public String assembleContextComp(ContextComponent component, int[] coords, boolean imports) {
+    // Imports/Enum/Record/Function/RCInterface
+    public String assembleContextComp(ContextComponent component, String[] coords) {
         String[] data;
-        if (imports) {
+        if (component.getType() == SimpleCompType.IMPORTS) {
             data = new String[] {
                     String.valueOf(component.getId()),
-                    String.valueOf(coords[0]),
-                    String.valueOf(coords[1])
+                    coords[0],
+                    coords[1]
             };
         } else {
             data = new String[] {
                     String.valueOf(component.getId()),
                     component.getName(),
-                    String.valueOf(coords[0]),
-                    String.valueOf(coords[1])
+                    coords[0],
+                    coords[1]
             };
         }
         String[] template;
@@ -55,12 +58,13 @@ public class CellFactory {
         return createCell(template, data) + createContext(component.getContext(), String.valueOf(component.getId()));
     }
 
-    public String assembleRCModule(RCModule module, int[] coords) {
+    // Module
+    public String assembleRCModule(RCModule module, String[] coords) {
         String[] data = {
                 module.getId() + "-0",
                 module.getName(),
-                String.valueOf(coords[0]),
-                String.valueOf(coords[1]),
+                coords[0],
+                coords[1],
                 String.valueOf(module.getId()),
                 module.getId() + "-0"
         };
@@ -68,7 +72,8 @@ public class CellFactory {
                 createConnections(module.getConnections());
     }
 
-    public String assembleJunction(Junction junction, int[] coords) {
+    // Junction
+    public String assembleJunction(Junction junction, String[] coords) {
         String[] template;
         switch (junction.getType()) {
             case DEFAULT -> template = XmlTemplates.JUNCTION;
@@ -78,13 +83,14 @@ public class CellFactory {
         String[] data = {
                 String.valueOf(junction.getId()),
                 String.valueOf(junction.getParentId()),
-                String.valueOf(coords[0]),
-                String.valueOf(coords[1])
+                coords[0],
+                coords[1]
         };
         return createCell(template, data);
     }
 
-    public String assembleRef(Reference ref, int[] coords) {
+    // Reference
+    public String assembleRef(Reference ref, String[] coords) {
         String[] template;
         switch (ref.getReferencedObj().getType()) {
             case RP -> template = XmlTemplates.RP_REF;
@@ -96,14 +102,15 @@ public class CellFactory {
                 String.valueOf(ref.getId()),
                 String.valueOf(ref.getParentId()),
                 ref.getReferencedObj().getName(),
-                String.valueOf(coords[0]),
-                String.valueOf(coords[1])
+                coords[0],
+                coords[1]
         };
         return createCell(template, data) +
-                createEventBoxes(ref.getEventBoxes(), String.valueOf(ref.getId()), 0.4f);
+                createEventBoxes(ref.getEventBoxes(), String.valueOf(ref.getId()), 0.7f);
     }
 
-    public String assembleConRpDef(ContextEventComponent component, int[] coords) {
+    // ControllerDef/RpDef
+    public String assembleConRpDef(ContextEventComponent component, String[] coords) {
         String connections = "";
         String[] template;
         float multiplier;
@@ -113,14 +120,14 @@ public class CellFactory {
             multiplier = component.getContainedComponentsCount();
         } else {
             template = XmlTemplates.RP_DEF;
-            multiplier = 0.54f;
+            multiplier = 0.94f;
         }
         String[] data = {
                 component.getId() + "-0",
                 String.valueOf(component.getParentId()),
                 component.getName(),
-                String.valueOf(coords[0]),
-                String.valueOf(coords[1]),
+                coords[0],
+                coords[1],
                 createContext(component.getContext(), (component.getId()+"-0")),
                 String.valueOf(component.getId()),
                 component.getId() + "-0"
@@ -133,7 +140,8 @@ public class CellFactory {
                 connections;
     }
 
-    public String assembleState(State state, int[] coords) {
+    // State (incl. final)
+    public String assembleState(State state, String[] coords) {
         String[] template;
         String[] data;
         String dataToReturn;
@@ -142,8 +150,8 @@ public class CellFactory {
             data = new String[]{
                     String.valueOf(state.getId()),
                     String.valueOf(state.getParentId()),
-                    String.valueOf(coords[0]),
-                    String.valueOf(coords[1])
+                    coords[0],
+                    coords[1]
             };
             dataToReturn = createCell(template, data);
         } else {
@@ -152,8 +160,8 @@ public class CellFactory {
                     String.valueOf(state.getId()),
                     String.valueOf(state.getParentId()),
                     state.getName(),
-                    String.valueOf(coords[0]),
-                    String.valueOf(coords[1]),
+                    coords[0],
+                    coords[1],
                     createContext(state.getContext(), String.valueOf(state.getId())),
                     String.valueOf(state.getBody().getId()),
                     String.valueOf(state.getId())
@@ -164,15 +172,16 @@ public class CellFactory {
         return dataToReturn;
     }
 
-    public String assembleOpStmDef(StmComponent component, int[] coords) {
+    // OpDef/StmDef
+    public String assembleOpStmDef(StmComponent component, String[] coords) {
         String[] template =
                 (component.getType() == ComplexCompType.STM)? XmlTemplates.STM_DEF : XmlTemplates.OP_DEF;
         String[] data = {
                 String.valueOf(component.getId()),
                 String.valueOf(component.getParentId()),
                 component.getName(),
-                String.valueOf(coords[0]),
-                String.valueOf(coords[1]),
+                coords[0],
+                coords[1],
                 createContext(component.getContext(), String.valueOf(component.getId())),
                 String.valueOf(component.getBody().getId()),
                 String.valueOf(component.getId())
@@ -185,8 +194,9 @@ public class CellFactory {
                 createConnections(component.getBody().getTransitions());
     }
 
+    // EventBoxes
     public String createEventBoxes(List<EventBox> boxes, String parentID, float multiplier) {
-        String estimatedXVal = String.valueOf(Math.round(multiplier * 280));
+        String estimatedXVal = String.valueOf(Math.round(multiplier * 160));
         String y = "0";
         String[] template = XmlTemplates.EVENT_BOX;
         StringBuilder dataToReturn = new StringBuilder();
@@ -203,6 +213,7 @@ public class CellFactory {
         return dataToReturn.toString();
     }
 
+    // Connections/Transitions
     public String createConnections(List<Connection> conns) {
         StringBuilder dataToReturn = new StringBuilder();
         for (Connection connection : conns) {
@@ -231,6 +242,7 @@ public class CellFactory {
         return dataToReturn.toString();
     }
 
+    // ContextData
     public String createContext(List<ContextData> contextList, String parentID) {
         StringBuilder contextToReturn = new StringBuilder();
         for (ContextData contextLine : contextList) {
