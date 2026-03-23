@@ -7,10 +7,7 @@ import java.util.Scanner;
 
 public class UIController { //TODO: Finish input loop + Javadoc
 
-    public UIController() {
-        inputLoop();
-    }
-    //FileRead reader = new FileRead("\\C:\\\\Users\\\\AAHil\\\\OneDrive\\\\Documents\\\\A\\\\York\\\\PRBX\\\\F3 Design + Impl\\\\ExampleProjects\\\\AlphaAlgTimedRC\\\\communicationC.rct\\", "\\test");
+    public UIController() {}
 
     public void inputLoop() {
         boolean close = false;
@@ -18,28 +15,28 @@ public class UIController { //TODO: Finish input loop + Javadoc
             Scanner scanner = new Scanner(System.in);
             System.out.println("Input path of .rct file to transform or exit to close.");
             String inputFilePath = scanner.nextLine();
-            if (inputFilePath.equals("exit")) {
+            if (inputFilePath.equalsIgnoreCase("exit")) {
                 close = true;
                 continue;
             }
 
             System.out.println("Input desired path for .xml file (file path ending in \\output.xml where 'output' is the desired name of the output file), or exit to close.");
             String outputFilePath = scanner.nextLine();
-            if (outputFilePath.equals("exit")) {
+            if (outputFilePath.equalsIgnoreCase("exit")) {
                 close = true;
                 continue;
             }
 
-            FileRead reader = new FileRead(inputFilePath, outputFilePath);
+            FileReadWrite reader = new FileReadWrite(inputFilePath, outputFilePath);
             ArrayList<String> inputData = reader.readInput();
             if (inputData.isEmpty()) {
                 continue;
             }
 
             TransformEngine engine = new TransformEngine(inputData);
-            //reader.write(engine.transform());
-
-            //sout("File successfully transformed");
+            if (reader.writeOutput(engine.transform())) {
+                System.out.println("File successfully transformed and output");
+            }
         }
     }
 }

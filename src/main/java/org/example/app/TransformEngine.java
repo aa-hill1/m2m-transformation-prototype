@@ -1,5 +1,7 @@
 package org.example.app;
 
+import org.example.app.src.SrcParser;
+import org.example.app.tgt.TgtGenerator;
 import org.example.app.transformModel.TransformModel;
 
 import java.util.ArrayList;
@@ -11,11 +13,11 @@ public class TransformEngine {
         this.data = data;
     }
 
-    public void transform() {
+    public String transform() {
         SrcParser parser = new SrcParser(data);
         TransformModel model = parser.parse();
 
-        TgtTemplateGenerator tgtGen = new TgtTemplateGenerator(model);
-        String mxGraphXml = tgtGen.translate();
+        TgtGenerator tgtGen = new TgtGenerator(model);
+        return tgtGen.translate();
     }
 }
