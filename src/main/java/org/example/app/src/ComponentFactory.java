@@ -1,4 +1,4 @@
-package org.example.app;
+package org.example.app.src;
 
 import org.example.app.transformModel.*;
 import org.example.app.transformModel.connection.Connection;
