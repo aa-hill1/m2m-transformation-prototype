@@ -11,7 +11,10 @@ public class XmlTemplates {
     private static Properties iconProperties = new Properties();
     private static final String[] BASE =
             {
-                    "<mxGraphModel dx=\"500\" dy=\"500\" grid=\"1\" gridSize=\"10\" " +
+                    "<mxfile host=\"app.diagrams.net\" agent=\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) " +
+                            "Gecko/20100101 Firefox/148.0\" version=\"29.6.6\">" +
+                            "\n<diagram name=\"Page-1\" id=\"diagramID\">" +
+                            "\n<mxGraphModel dx=\"500\" dy=\"500\" grid=\"1\" gridSize=\"10\" " +
                             "guides=\"1\" tooltips=\"1\" connect=\"1\" arrows=\"1\" " +
                             "fold=\"1\" page=\"1\" pageScale=\"1\" pageWidth=\"3300\" " +
                             "pageHeight=\"4681\" math=\"0\" shadow=\"0\">" +
@@ -19,7 +22,7 @@ public class XmlTemplates {
                             "\n\t<mxCell id=\"0\" />" +
                             "\n\t<mxCell id=\"1\" parent=\"0\" />",
                     // Components
-                    "\n</root>\n</mxGraphModel>"
+                    "\n</root>\n</mxGraphModel>\n</diagram>\n</mxfile>"
             };
     private static final String[] PACKAGE =
             {
@@ -112,7 +115,7 @@ public class XmlTemplates {
             };
     private static final String[] INTERFACE =
             {
-                    "<\n\tmxCell id=\"",
+                    "\n\t<mxCell id=\"",
                     // ID
                     "\" parent=\"1\" style=\"swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;" +
                             "fillColor=default;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;" +
@@ -127,7 +130,7 @@ public class XmlTemplates {
             };
     private static final String[] MODULE =
             {
-                    "<\n\tmxCell id=\"",
+                    "\n\t<mxCell id=\"",
                     // ID-0
                     "\" parent=\"1\" style=\"swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;" +
                             "fillColor=default;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;" +
@@ -150,7 +153,7 @@ public class XmlTemplates {
             };
     private static final String[] OP_DEF =
             {
-                    "<\n\tmxCell id=\"",
+                    "\n\t<mxCell id=\"",
                     // ID
                     "\" parent=\"",
                     // parent ID
@@ -177,7 +180,7 @@ public class XmlTemplates {
             };
     private static final String[] CONTROLLER_DEF =
             {
-                    "<\n\tmxCell id=\"",
+                    "\n\t<mxCell id=\"",
                     // ID-0
                     "\" parent=\"",
                     // parent ID
@@ -204,7 +207,7 @@ public class XmlTemplates {
             };
     private static final String[] RP_DEF =
             {
-                    "<\n\tmxCell id=\"",
+                    "\n\t<mxCell id=\"",
                     // ID-0
                     "\" parent=\"",
                     // parent ID
@@ -227,11 +230,11 @@ public class XmlTemplates {
                     // ID-0
                     "\" style=\"rounded=0;whiteSpace=wrap;html=1;fillColor=none;container=1;collapsible=0;recursiveResize=0;" +
                             "strokeColor=none;\" value=\"\" vertex=\"1\">\n\t\t<mxGeometry height=\"60\" " +
-                            "width=\"157.5\" y=\"26\" as=\"geometry\" /\n\t</mxCell>>"
+                            "width=\"157.5\" y=\"26\" as=\"geometry\" />\n\t</mxCell>"
             };
     private static final String[] STM_DEF =
             {
-                    "<\n\tmxCell id=\"",
+                    "\n\t<mxCell id=\"",
                     // ID
                     "\" parent=\"",
                     // parent ID
@@ -258,7 +261,7 @@ public class XmlTemplates {
             };
     private static final String[] STATE =
             {
-                    "<\n\tmxCell id=\"",
+                    "\n\t<mxCell id=\"",
                     // ID
                     "\" parent=\"",
                     // parent ID
@@ -282,7 +285,7 @@ public class XmlTemplates {
             };
     private static final String[] OP_REF =
             {
-                    "<\n\tmxCell id=\"",
+                    "\n\t<mxCell id=\"",
                     // ID
                     "\" parent=\"",
                     // parent ID
@@ -299,7 +302,7 @@ public class XmlTemplates {
             };
     private static final String[] CONTROLLER_REF =
             {
-                    "<\n\tmxCell id=\"",
+                    "\n\t<mxCell id=\"",
                     // ID
                     "\" parent=\"",
                     // parent ID
@@ -316,7 +319,7 @@ public class XmlTemplates {
             };
     private static final String[] RP_REF =
             {
-                    "<\n\tmxCell id=\"",
+                    "\n\t<mxCell id=\"",
                     // ID
                     "\" parent=\"",
                     // parent ID
@@ -349,7 +352,7 @@ public class XmlTemplates {
             };
     private static final String[] FINAL_STATE =
             {
-                    "<\n\tmxCell id=\"",
+                    "\n\t<mxCell id=\"",
                     // ID
                     "\" parent=\"",
                     // parent ID
@@ -364,7 +367,7 @@ public class XmlTemplates {
             };
     private static final String[] JUNCTION =
             {
-                    "<\n\tmxCell id=\"",
+                    "\n\t<mxCell id=\"",
                     // ID
                     "\" parent=\"",
                     // parent ID
@@ -378,7 +381,7 @@ public class XmlTemplates {
             };
     private static final String[] INITIAL_JUNCTION =
             {
-                    "<\n\tmxCell id=\"",
+                    "\n\t<mxCell id=\"",
                     // ID
                     "\" parent=\"",
                     // parent ID
@@ -394,7 +397,7 @@ public class XmlTemplates {
             };
     private static final String[] PROB_JUNCTION =
             {
-                    "<\n\tmxCell id=\"",
+                    "\n\t<mxCell id=\"",
                     // ID
                     "\" parent=\"",
                     // parent ID
@@ -408,7 +411,7 @@ public class XmlTemplates {
             };
     private static final String[] TEXT_ROW =
             {
-                    "<\n\tmxCell id=\"",
+                    "\n\t<mxCell id=\"",
                     // ID
                     "\" parent=\"",
                     // parent ID
@@ -637,19 +640,19 @@ public class XmlTemplates {
     }
 
     public static String[] getEnum() {
-        return combineIconData(ENUM, 1, "/icons/enum.properties");
+        return combineIconData(ENUM, 1, "icons/enum.properties");
     }
 
     public static String[] getRecord() {
-        return combineIconData(RECORD, 1, "/icons/record.properties");
+        return combineIconData(RECORD, 1, "./icons/record.properties");
     }
 
     public static String[] getFunction() {
-        return combineIconData(FUNCTION, 1, "/icons/function.properties");
+        return combineIconData(FUNCTION, 1, "icons/function.properties");
     }
 
     public static String[] getModule() {
-        return combineIconData(MODULE, 1, "/icons/module.properties");
+        return combineIconData(MODULE, 1, "icons/module.properties");
     }
 
     public static String[] getEventBox() {
@@ -681,11 +684,11 @@ public class XmlTemplates {
         String path;
         String[] original;
         if (def) {
-            path = "/icons/opDef.properties";
-            original = CONTROLLER_DEF;
+            path = "icons/opDef.properties";
+            original = OP_DEF;
         } else {
             path = "icons/opRef.properties";
-            original = CONTROLLER_REF;
+            original = OP_REF;
         }
         return combineIconData(original, 2, path);
     }
@@ -694,7 +697,7 @@ public class XmlTemplates {
         String path;
         String[] original;
         if (def) {
-            path = "/icons/conDef.properties";
+            path = "icons/conDef.properties";
             original = CONTROLLER_DEF;
         } else {
             path = "icons/conRef.properties";
@@ -707,11 +710,11 @@ public class XmlTemplates {
         String path;
         String[] original;
         if (def) {
-            path = "/icons/rpDef.properties";
-            original = CONTROLLER_DEF;
+            path = "icons/rpDef.properties";
+            original = RP_DEF;
         } else {
             path = "icons/rpRef.properties";
-            original = CONTROLLER_REF;
+            original = RP_REF;
         }
         return combineIconData(original, 2, path);
     }
@@ -720,11 +723,11 @@ public class XmlTemplates {
         String path;
         String[] original;
         if (def) {
-            path = "/icons/stmDef.properties";
-            original = CONTROLLER_DEF;
+            path = "icons/stmDef.properties";
+            original = STM_DEF;
         } else {
             path = "icons/stmRef.properties";
-            original = CONTROLLER_REF;
+            original = STM_REF;
         }
         return combineIconData(original, 2, path);
     }
@@ -750,7 +753,7 @@ public class XmlTemplates {
     }
 
     public static String[] getConstant() {
-        return combineIconData(VAR, 2, "icons/var.properties");
+        return combineIconData(CONSTANT, 2, "icons/var.properties");
     }
 
     public static String[] getVar() {
@@ -758,7 +761,7 @@ public class XmlTemplates {
     }
 
     public static String[] getClock() {
-        return combineIconData(CLOCK, 2, "/icons/clock.properties");
+        return combineIconData(CLOCK, 2, "icons/clock.properties");
     }
 
     public static String[] getInterfaceRef(ContextType type) {
@@ -766,15 +769,15 @@ public class XmlTemplates {
         String path = switch (type) {
             case R_INTERFACE -> {
                 original = REQ_INTERFACE;
-                yield "/icons/reqInterface.properties";
+                yield "icons/reqInterface.properties";
             }
             case P_INTERFACE -> {
                 original = PROV_INTERFACE;
-                yield "/icons/proInterface.properties";
+                yield "icons/proInterface.properties";
             }
             case D_INTERFACE -> {
                 original = DEF_INTERFACE;
-                yield "/icons/defInterface.properties";
+                yield "icons/defInterface.properties";
             }
             default -> throw new RuntimeException("Error - cannot find interface template of type " + type);
         };
@@ -784,7 +787,7 @@ public class XmlTemplates {
     private static String[] combineIconData(String[] original, int indexToCombo, String path) {
         String[] dataToReturn = new String[original.length - 1];
         try {
-            iconProperties.load(new FileInputStream(path));
+            iconProperties.load(new FileInputStream(XmlTemplates.class.getClassLoader().getResource(path).getPath()));
             for (int i=0; i<original.length; i++) {
                 if (i ==  indexToCombo) {
                     dataToReturn[i] = original[i] + iconProperties.getProperty("img") + original[i+1];

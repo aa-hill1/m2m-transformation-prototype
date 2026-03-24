@@ -9,10 +9,12 @@ public abstract class NamedComponent {
     protected int parentId = 1;
 
     public NamedComponent(int id, String name) {
+        this.id = id;
         this.name = name;
     }
 
     public NamedComponent(int id, String name, int parentId) {
+        this.id = id;
         this.name = name;
         this.parentId = parentId;
     }

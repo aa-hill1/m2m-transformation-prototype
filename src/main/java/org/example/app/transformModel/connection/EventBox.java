@@ -9,7 +9,7 @@ public class EventBox extends NamedComponent {
 
     public EventBox(int id, String name, int parentId) {
         super(id, name, parentId);
-        this.eventName = name.split(" ")[0];
+        this.eventName = name.split(" ")[0].replace(":", "");
     }
 
     public String getEventName() {

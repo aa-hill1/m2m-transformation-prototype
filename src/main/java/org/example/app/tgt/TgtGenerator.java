@@ -70,13 +70,15 @@ public class TgtGenerator {
                 data.append(transformComponent(current));
             }
             compsToProcess.removeFirst();
-            updateStacksAfterTransform(current.getContainedComponentsCount());
+            updateStacksAfterTransform(1 + current.getContainedComponentsCount());
 
             Map<String, List<NamedComponent>> children = current.getChildren();
             if (children != null) {
-                pushToStacks(children.size());
-                for (NamedComponent child : children.get("components")) {
-                    compsToProcess.add(1, child);
+                if (children.containsKey("components")) {
+                    pushToStacks(children.get("components").size());
+                    for (NamedComponent child : children.get("components")) {
+                        compsToProcess.add(1, child);
+                    }
                 }
             }
         }

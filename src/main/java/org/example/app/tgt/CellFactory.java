@@ -207,6 +207,7 @@ public class CellFactory {
             String[] data = {
                     String.valueOf(box.getId()),
                     parentID,
+                    box.getName(),
                     estimatedXVal,
                     y
             };

@@ -117,7 +117,7 @@ public class SrcParser {
                 break;
             default:
                 // catch operation signature
-                if (data.get(i+1).equals("(")) {
+                if (i != data.size()-1 && data.get(i+1).equals("(")) {
                     offset = factory.createOpSig(i);
                 }
         }

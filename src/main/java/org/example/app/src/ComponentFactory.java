@@ -164,10 +164,11 @@ public class ComponentFactory {
      * @return offset to increment parser to starting index of next component.
      */
     public int createEnumRecord(int start, SimpleCompType type) {
-        ContextComponent component = new ContextComponent(this.useNextId(), data.get(start), type);
+        ContextComponent component = new ContextComponent(useNextId(), data.get(start), type);
+        updateModel(component);
         pushToParentStack(component.getId());
         int contextSize = (type==SimpleCompType.RECORD)? 3 : 1;
-        int endIndex = formatter.findCompEnd(start);
+        int endIndex = formatter.findCompEnd(start+1);
         for (int i=start+2; i<endIndex; i+=contextSize) {
             String contextRowName = (type==SimpleCompType.RECORD)?
                     formatter.buildString(i, i+3, true) : data.get(i);
@@ -179,8 +180,7 @@ public class ComponentFactory {
             updateModel(contextLine);
         }
         attemptPopParentStack();
-        updateModel(component);
-        return (2 + (start - endIndex));
+        return (2 + (endIndex - start));
     }
 
     /**
@@ -448,10 +448,10 @@ public class ComponentFactory {
      */
     public int createOpSig(int start) {
         int end = formatter.findStringIndex(start, ")");
-        String name = formatter.buildString(start, end, List.of(',', ':'));
+        String name = formatter.buildString(start, end+1, List.of(',', ':'));
         ContextData component = new ContextData(this.useNextId(), name, parentStack.peek(), ContextType.OP_SIG);
         updateModel(component);
-        return 1 + (start-end);
+        return 1 + (end-start);
     }
 
     /**
