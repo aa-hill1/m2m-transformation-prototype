@@ -2,10 +2,12 @@ package org.example.ui;
 
 import org.example.app.TransformEngine;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class UIController { //TODO: Finish input loop + Javadoc
+public class UIController { //TODO: Javadoc
 
     public UIController() {}
 
@@ -20,22 +22,24 @@ public class UIController { //TODO: Finish input loop + Javadoc
                 continue;
             }
 
-            System.out.println("Input desired path for .xml file (file path ending in \\output.xml where 'output' is the desired name of the output file), or exit to close.");
+            System.out.println("Input desired path for .xml file (file path ending in \\output.xml " +
+                    "where 'output' is the desired name of the output file), or exit to close.");
             String outputFilePath = scanner.nextLine();
             if (outputFilePath.equalsIgnoreCase("exit")) {
                 close = true;
                 continue;
             }
 
-            FileReadWrite reader = new FileReadWrite(inputFilePath, outputFilePath);
-            ArrayList<String> inputData = reader.readInput();
-            if (inputData.isEmpty()) {
-                continue;
-            }
+            try {
+                FileReadWrite reader = new FileReadWrite(inputFilePath, outputFilePath);
+                ArrayList<String> inputData = reader.readInput();
 
-            TransformEngine engine = new TransformEngine(inputData);
-            if (reader.writeOutput(engine.transform())) {
-                System.out.println("File successfully transformed and output");
+                TransformEngine engine = new TransformEngine(inputData);
+                if (reader.writeOutput(engine.transform())) {
+                    System.out.println("File successfully transformed and output");
+                }
+            } catch (RuntimeException | FileNotFoundException e) {
+                System.out.println(e.getMessage() + "\n\n");
             }
         }
     }
