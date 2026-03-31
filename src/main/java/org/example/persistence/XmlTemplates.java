@@ -684,7 +684,7 @@ public class XmlTemplates {
         String path;
         String[] original;
         if (def) {
-            path = "icons/opDef.properties";
+            path = "icons/opDefSig.properties";
             original = OP_DEF;
         } else {
             path = "icons/opRef.properties";
@@ -749,7 +749,7 @@ public class XmlTemplates {
     }
 
     public static String[] getOpSig() {
-        return combineIconData(OP_SIG, 2, "icons/opSig.properties");
+        return combineIconData(OP_SIG, 2, "icons/opDefSig.properties");
     }
 
     public static String[] getConstant() {

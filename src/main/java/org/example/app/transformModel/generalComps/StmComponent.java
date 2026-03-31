@@ -24,10 +24,6 @@ public class StmComponent extends ContextEventComponent {
         return body;
     }
 
-    public ComplexCompType getType() {
-        return type;
-    }
-
     @Override
     public void addChild(NamedComponent child) {
         if (child instanceof ContextData || child instanceof EventBox) {
