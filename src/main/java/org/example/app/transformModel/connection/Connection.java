@@ -20,7 +20,7 @@ public class Connection  extends NamedComponent {
     // For transitions in state diagrams
     public Connection(int id, String name, int parentId, int src, int tgt, String label) {
         super(id, name, parentId);
-        this.label = label;
+        this.label = label.replace("<", "%lt;").replace(">", "%gt;");
         this.src = src;
         this.tgt = tgt;
         this.bidi = false;

@@ -433,7 +433,7 @@ public class ComponentFactory {
     public int createStateAction(int start, String type) {
         int end = formatter.findStringIndex(start,
                 List.of("entry", "during", "exit", "state", "final", "initial", "probabilistic",
-                        "junction", "transition"));
+                        "junction", "transition", "}"));
         String name = type + " " + formatter.buildString(start, end, List.of(',', ';'));
         ContextData action = new ContextData(this.useNextId(), name, parentStack.peek(), ContextType.TEXT);
         updateModel(action);
@@ -464,7 +464,7 @@ public class ComponentFactory {
         int offset = 8;
         int srcId = findEventBoxForConnect(data.get(start), data.get(start+2));
         int tgtId = findEventBoxForConnect(data.get(start+4), data.get(start+6));
-        Connection connection = new Connection(this.useNextId(), getStmBodyParentID(), srcId, tgtId);
+        Connection connection = new Connection(this.useNextId(), parentStack.peek(), srcId, tgtId);
         switch (data.get(start+7)) {
             case "[mult]":
                 connection.setBidi(true);
@@ -500,7 +500,7 @@ public class ComponentFactory {
                 Integer.parseInt(details.get(1)),
                 details.get(2));
         updateModel(transition);
-        return 1 + (end-start);
+        return 2 + (end-start);
     }
 
     /**
@@ -546,31 +546,31 @@ public class ComponentFactory {
                     label.append("}");
                     inProb = false;
                 }
-                switch (current) {
-                    case "from":
-                        srcId = data.get(i+1);
-                        i++;
-                        break;
-                    case "to":
-                        tgtId = data.get(i+1);
-                        i++;
-                        break;
-                    case "probability":
-                        label.append("p{");
-                        inProb = true;
-                        break;
-                    case "condition":
-                        label.append("[");
-                        inCondition = true;
-                        break;
-                    case "action":
-                        label.append("/");
-                        break;
-                    case "trigger", "send":
-                        continue;
-                    default:
-                        label.append(current);
-                }
+            }
+            switch (current) {
+                case "from":
+                    srcId = String.valueOf(model.getCompByName(data.get(i+1)).getId());
+                    i++;
+                    break;
+                case "to":
+                    tgtId = String.valueOf(model.getCompByName(data.get(i+1)).getId());
+                    i++;
+                    break;
+                case "probability":
+                    label.append("p{");
+                    inProb = true;
+                    break;
+                case "condition":
+                    label.append("[");
+                    inCondition = true;
+                    break;
+                case "action":
+                    label.append("/");
+                    break;
+                case "trigger", "send":
+                    continue;
+                default:
+                    label.append(current);
             }
         }
         if (srcId == null) {
@@ -717,11 +717,20 @@ public class ComponentFactory {
          */
         public int findStringIndex(int start, List<String> toFind) {
             int found = -1;
+            int braceCount = 0;
             for (int i=start; i<data.size(); i++) {
-                if (toFind.contains(data.get(i))) {
-                    found = i;
-                    break;
+                String current = data.get(i);
+                if (toFind.contains(current)) {
+                    if (current.equals("}") && braceCount != 0) {
+                        braceCount--;
+                    } else {
+                        found = i;
+                        break;
+                    }
+                } else if (current.contains("{")) {
+                    braceCount++;
                 }
+
             }
             return found;
         }

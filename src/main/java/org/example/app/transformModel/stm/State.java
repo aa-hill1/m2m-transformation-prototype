@@ -7,6 +7,8 @@ import org.example.app.transformModel.generalComps.NamedComponent;
 import org.example.app.transformModel.generalComps.ComplexCompType;
 import org.example.app.transformModel.generalComps.StmComponent;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -77,7 +79,11 @@ public class State extends StmComponent {
         if (finalState) {
             return null;
         }
-        return super.getChildren();
+        Map<String, List<NamedComponent>> children = new HashMap<>();
+        List<NamedComponent> contextList = new ArrayList<>(context);
+        children.put("context", contextList);
+        children.put("components", List.of(body));
+        return children;
     }
 
     @Override

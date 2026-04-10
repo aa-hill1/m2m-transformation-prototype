@@ -38,7 +38,7 @@ public class UIController { //TODO: Javadoc
                 if (reader.writeOutput(engine.transform())) {
                     System.out.println("File successfully transformed and output");
                 }
-            } catch (RuntimeException | FileNotFoundException e) {
+            } catch (FileNotFoundException e) {
                 System.out.println(e.getMessage() + "\n\n");
             }
         }

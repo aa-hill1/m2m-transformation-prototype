@@ -7,6 +7,7 @@ import org.example.app.transformModel.generalComps.NamedComponent;
 import org.example.app.transformModel.generalComps.StmComponent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ public class RCModule extends NamedComponent {
     private List<StmComponent> operations = new ArrayList<>();
     private List<ContextEventComponent> rps = new ArrayList<>();
     private List<StmComponent> stms = new ArrayList<>();
+    private List<Reference> refs = new ArrayList<>();
 
     public RCModule(int id, String name) {
         super(id, name);
@@ -76,6 +78,17 @@ public class RCModule extends NamedComponent {
         stms.add(stm);
     }
 
+    public List<Reference> getRefs() {
+        return refs;
+    }
+    public void addRef(Reference ref) {
+        if (refs.contains(ref)) {
+            throw new RuntimeException(
+                    String.format("Cannot add reference %s to module %s twice", ref.getName(), name));
+        }
+        refs.add(ref);
+    }
+
     @Override
     public void addChild(NamedComponent child) {
         if (child instanceof Connection) {
@@ -92,6 +105,8 @@ public class RCModule extends NamedComponent {
                 child instanceof ContextEventComponent
                         && ((ContextEventComponent) child).getType() == ComplexCompType.RP) {
             addRP((ContextEventComponent) child);
+        } else if (child instanceof Reference) {
+            addRef((Reference) child);
         } else {
             throw new RuntimeException(
                     String.format(
@@ -105,11 +120,12 @@ public class RCModule extends NamedComponent {
 
     @Override
     public Map<String, List<NamedComponent>> getChildren() {
-        Map<String, List<NamedComponent>> children = super.getChildren();
+        Map<String, List<NamedComponent>> children = new HashMap<>();
         List<NamedComponent> componentList = new ArrayList<>(controllers);
         componentList.addAll(operations);
         componentList.addAll(rps);
         componentList.addAll(stms);
+        componentList.addAll(refs);
         children.put("components", componentList);
         List<NamedComponent> connectionList = new ArrayList<>(connections);
         children.put("connections", connectionList);
@@ -119,7 +135,7 @@ public class RCModule extends NamedComponent {
     @Override
     public int getContainedComponentsCount() {
         int count = 0;
-        for (List<? extends NamedComponent> compList : List.of(controllers, operations, rps, stms)) {
+        for (List<? extends NamedComponent> compList : List.of(controllers, operations, rps, stms, refs)) {
             for (NamedComponent comp : compList) {
                 count += 1 + comp.getContainedComponentsCount();
             }

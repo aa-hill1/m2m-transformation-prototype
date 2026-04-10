@@ -6,7 +6,7 @@ public class ContextData extends NamedComponent {
     protected ContextType type;
 
     public ContextData(int id, String name, int parentId, ContextType type) {
-        super(id, name, parentId);
+        super(id, name.replace("<", "%lt;").replace(">", "%gt;"), parentId);
         this.type = type;
     }
 

@@ -6,6 +6,8 @@ import org.example.app.transformModel.generalComps.ComplexCompType;
 import org.example.app.transformModel.generalComps.ContextEventComponent;
 import org.example.app.transformModel.generalComps.NamedComponent;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,8 +68,9 @@ public class Reference extends ContextEventComponent {
 
     @Override
     public Map<String, List<NamedComponent>> getChildren() {
-        Map<String, List<NamedComponent>> children = super.getChildren();
-        children.remove("context");
+        Map<String, List<NamedComponent>> children = new HashMap<>();
+        List<NamedComponent> eventBoxList = new ArrayList<>(eventBoxes);
+        children.put("eventBox", eventBoxList);
         return children;
     }
 

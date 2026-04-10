@@ -236,7 +236,7 @@ public class CellFactory {
                 if (connection.isAsync()) {
                     fontstyle = "2";
                 }
-                data.add(5, fontstyle);
+                data.add(6, fontstyle);
             }
             dataToReturn.append(createCell(template, data.toArray(new String[0])));
         }
