@@ -30,17 +30,21 @@ public class UIController { //TODO: Javadoc
                 continue;
             }
 
-            try {
-                FileReadWrite reader = new FileReadWrite(inputFilePath, outputFilePath);
-                ArrayList<String> inputData = reader.readInput();
+            executeTransform(inputFilePath, outputFilePath);
+        }
+    }
 
-                TransformEngine engine = new TransformEngine(inputData);
-                if (reader.writeOutput(engine.transform())) {
-                    System.out.println("File successfully transformed and output");
-                }
-            } catch (FileNotFoundException e) {
-                System.out.println(e.getMessage() + "\n\n");
+    public void executeTransform(String inputFilePath, String outputFilePath) {
+        try {
+            FileReadWrite reader = new FileReadWrite(inputFilePath, outputFilePath);
+            ArrayList<String> inputData = reader.readInput();
+
+            TransformEngine engine = new TransformEngine(inputData);
+            if (reader.writeOutput(engine.transform())) {
+                System.out.println("File successfully transformed and output");
             }
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage() + "\n\n");
         }
     }
 }

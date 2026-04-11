@@ -1,0 +1,318 @@
+interface OperationsDef {
+	
+ChangeDirection( lc : Loc)
+}
+operation MoveTowards( a : real) {
+	terminates
+}
+operation Reverse() {
+	terminates
+}
+operation MoveForward() {
+	terminates
+}
+operation Stop() {
+	terminates
+}
+operation TurnLeft() {
+	terminates
+}
+operation TurnRight() {
+	terminates
+}
+interface Events {
+	
+	
+	
+	
+	
+	event odometer : real
+	
+	event turn : real
+	
+event found
+
+
+event cmd
+event obstacle : Loc
+event flash
+}
+enumeration Loc { left right no } 
+
+interface OperationsSig {
+	
+	MoveTowards( a : real)
+	Reverse()
+	MoveForward()
+	Stop()
+	
+
+TurnLeft() TurnRight()
+}  
+robotic platform VCRobot { 
+	
+	
+
+	
+	 
+	
+	
+uses Events provides OperationsSig
+provides OperationsDef
+}
+operation ChangeDirection( lc : Loc) {
+	requires OperationsSig 
+	initial i0 
+	junction From 
+	final j0
+	transition t0 {
+		from From
+		to j0
+		trigger
+		condition lc == Loc::right
+		action TurnLeft()
+	}
+	transition t1 {
+		from From
+		to j0
+		trigger
+		condition lc == Loc::left
+		action TurnRight()
+	}
+	transition t2 {
+		from i0
+		to From
+	}
+}
+stm Movement {  
+	requires OperationsSig
+	requires OperationsDef
+	uses Events
+	var angle : real , d0 : real , d1 : real , l : Loc , l_new : Loc
+	const outPeriod : int , stuckDist : real , turningPeriod : int , batteryLife :
+	int , forwardPeriod : int 
+	clock T1
+	clock T2
+	initial i0
+	state Searching {
+		state Exploring {
+			entry MoveForward() 
+			state Watch {
+			}
+			initial i0
+			transition t0 {
+				from i0
+				to Watch
+			}
+			transition t1 {
+				from Watch
+				to Watch
+				trigger obstacle ? l_new
+					condition l == Loc::no
+					action l = l_new
+			}
+		
+		}
+		state Avoiding {
+			during ChangeDirection( l)
+			exit l = Loc::no
+		
+			entry odometer ? d0 <{ 0 }
+		}
+		state MovingTowardsGoal {
+			entry MoveTowards( angle)
+	
+			state Watch {
+			}
+			initial i0
+			transition t0 {
+				from i0
+				to Watch
+			}
+			transition t1 {
+				from Watch
+				to Watch
+				trigger obstacle ? l_new
+					condition l == Loc::no
+					action l = l_new
+			}
+		}
+		initial i0
+		state AvoidingAgain {
+			entry odometer ? d1 <{ 0 }
+		}
+		state GettingOut {
+			entry Reverse()
+			exit l = Loc::no
+		}
+		state ExploringAgain {
+			entry MoveForward()
+			state Watch {
+			}
+			initial i0
+			transition t0 {
+				from i0
+				to Watch
+			}
+			transition t1 {
+				from Watch
+				to Watch
+				trigger obstacle ? l_new
+					condition l == Loc::no
+					action l = l_new
+			}
+		}
+		state Found {
+			entry flash ; Stop()
+		}
+		final f0
+		transition t0 {
+			from Exploring
+			to Avoiding
+			trigger
+			condition l != Loc::no
+				action # T1
+		}
+		transition t1 {
+			from i0
+			to Exploring
+			trigger
+			action 
+			# T2
+		}
+		transition t3 {
+			from Exploring
+			to MovingTowardsGoal
+			trigger turn ? angle
+			condition l == Loc::no /\ since ( T2 ) > batteryLife
+		}
+		transition t6 {
+			from AvoidingAgain
+			to Avoiding
+			trigger 
+			condition Length ( d1 , d0 ) > stuckDist
+				action # T1
+		}
+		transition t7 {
+			from AvoidingAgain
+			to GettingOut
+			trigger 
+			condition Length ( d1 , d0 ) <= stuckDist
+				action # T1
+		}
+		transition t9 {
+			from ExploringAgain
+			to AvoidingAgain
+			trigger
+			condition l != Loc::no
+		}
+		transition t11 {
+			from GettingOut
+			to Exploring
+			trigger 
+			condition since ( T1 ) >= outPeriod
+		}
+		transition t15 {
+			from MovingTowardsGoal
+			to Avoiding
+			trigger
+			condition l != Loc::no
+				action # T1
+		}
+		transition t2 {
+			from Avoiding
+			to ExploringAgain
+			trigger 
+			condition since ( T1 ) >= turningPeriod
+				action # T1
+		}
+		transition t8 {
+			from ExploringAgain
+			to MovingTowardsGoal
+			trigger turn ? angle
+			condition l == Loc::no /\ since ( T2 ) > batteryLife /\ since ( T1 ) >
+				forwardPeriod
+		}		
+		transition t5 {
+			from MovingTowardsGoal
+			to Found
+			trigger found
+			condition l == Loc::no
+		}
+		
+		transition t10 {
+			from Found
+			to f0
+			trigger
+		}
+		entry l = Loc::no
+		transition t4 {
+			from MovingTowardsGoal
+			to MovingTowardsGoal
+			trigger turn ? angle
+			condition l == Loc::no
+		}
+	}
+
+
+	state Finish {
+		entry Stop()
+	}
+		transition t0 {
+		from i0
+		to Searching
+	}
+	
+	transition t2 {
+		from Searching
+		to Finish
+		trigger cmd
+	}
+	
+}
+
+function Length( i : real, j:real) : real {
+	postcondition result >= 0
+}
+controller VCController {  
+	sref stm_ref0 = Movement
+	requires OperationsSig
+	uses Events 
+	connection stm_ref0 on flash to VCController on flash
+	
+	
+	
+	
+	
+	
+	
+	
+	
+connection VCController on found to stm_ref0 on found
+	
+	connection VCController on turn to stm_ref0 on turn
+	connection VCController on odometer to stm_ref0 on odometer
+	
+connection VCController on cmd to stm_ref0 on cmd
+	connection VCController on obstacle to stm_ref0 on obstacle
+requires OperationsDef
+}
+module VCModule {
+	rref robot = VCRobot
+	cref cont = VCController
+	
+	connection cont on flash to robot on flash ( _async )
+	
+	
+	
+	  
+	
+	
+connection robot on found to cont on found ( _async )
+	connection robot on turn to cont on turn ( _async )
+	connection robot on odometer to cont on odometer ( _async )
+	
+
+connection robot on cmd to cont on cmd ( _async )
+connection robot on obstacle to cont on obstacle ( _async )
+}

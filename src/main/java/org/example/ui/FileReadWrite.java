@@ -33,7 +33,11 @@ public class FileReadWrite { // TODO: Javadoc
             while (scanner.hasNextLine()) {
                 String[] line = scanner.nextLine().split(" ");
                 for (String wrd : line) {
-                    inputData.add(wrd.strip());
+                    String strippedWrd = wrd.strip();
+                    if (!strippedWrd.isEmpty()) {
+                        inputData.add(strippedWrd);
+                    }
+                    //inputData.add(wrd.strip());
                 }
             }
         } catch (IOException e) {

@@ -1,0 +1,328 @@
+type vector
+type time 
+
+operation enableObjectWatch() {
+	terminates
+}
+operation disableObjectWatch() {
+	terminates
+}
+operation searchObject() {
+	terminates
+}
+operation moveToObject() {
+	terminates
+}
+operation disableNeighbourDetection() {
+	terminates
+}
+operation moveAroundObject() {
+	terminates
+}
+operation closeInOnObject() {
+	terminates
+}
+operation enableGoalFinding() {
+	terminates
+}
+operation scanAndAlign() {
+	terminates
+}
+operation pushObject() {
+	terminates
+}
+operation evade() {
+	terminates
+}
+operation enableNeighbourDetection() {
+	terminates
+}
+operation disableGoalFinding() {
+	terminates
+}
+
+interface IObjectWatchOps {
+	enableObjectWatch()
+	disableObjectWatch()
+}
+interface IObjectWatch {
+	event objectSeen : nat
+}
+
+interface IMotionControl {
+	searchObject()
+	moveToObject()
+	closeInOnObject()
+	pushObject()
+	moveAroundObject()
+	scanAndAlign()
+	evade()
+}
+
+interface IWalk {
+	
+	
+	stopMoving()
+	scanAndAlign()
+	evade()
+}
+
+interface IGoalWatchOps {
+	enableGoalFinding()
+	disableGoalFinding()
+}
+
+interface IGoalWatch {
+	event goalSeen
+}
+
+interface INeighbourWatchOps {
+	enableNeighbourDetection()
+	disableNeighbourDetection()
+}
+
+interface INeighbourWatch {
+	event neighbourDetected : nat
+}
+
+stm Pusher {
+	clock T
+	clock N
+	clock C
+	
+	requires IMotionControl
+	requires INeighbourWatchOps
+	requires IGoalWatchOps
+	requires IObjectWatchOps
+	
+	uses INeighbourWatch
+	uses IGoalWatch
+	uses IObjectWatch
+		
+	const close : nat , Ta : nat , Tb : nat , Tc : nat , Td : nat ,
+	Te : nat , S : nat
+	
+	var neighbours : nat = 2
+	var distance : nat , d : nat , n : nat
+	var goal : boolean
+	
+	initial I
+	state Searching {
+		
+		entry  enableObjectWatch()
+		during searchObject()
+	} 
+	state MovingToObject {    
+		    
+		during moveToObject()
+		initial I
+		
+		state Watch { }
+		transition M0 { from I to Watch }
+		transition M1 { from Watch to Watch trigger objectSeen ? d # T condition distance >= close /\ since ( T ) < Ta
+			action distance = d
+		}
+		                  
+	}
+	state ClosingInOnObject {
+		
+		during closeInOnObject()
+		initial I
+		
+		state Watch { }
+		transition C0 { from I to Watch }
+		transition C1 { from Watch to Watch trigger objectSeen ? d # T condition distance > 0 /\ since ( T ) < Ta
+			action distance = d
+		}
+		
+	}
+	
+		state Scanning { 
+		
+		 
+		 
+		 
+		 
+		entry goal = false ; enableGoalFinding() 
+		during scanAndAlign()
+		
+		 
+		exit   disableGoalFinding()
+		 
+		initial I
+		
+		
+		
+		
+		state Watch { }
+		
+		transition S0 { from I to Watch }
+		
+		
+		
+		
+		transition S4 { from Watch to Watch trigger goalSeen
+			action goal = true  }
+		
+		
+		
+		
+		
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+	state Pushing {
+		
+		during pushObject()
+		
+		initial I 
+		
+		
+		
+		
+		state Watch { }
+		
+		transition P0  { from I to Watch }
+		
+		transition t0 {
+			from Watch
+			to Watch
+			trigger objectSeen ? d
+			condition distance == 0 /\ d == 0
+		}
+		
+		transition t1 {
+			from Watch
+			to Watch
+			trigger objectSeen ? d
+			condition distance == 0 /\ d > 0
+			action # C ; distance = d
+		}
+		
+		transition t2 {
+			from Watch
+			to Watch
+			trigger neighbourDetected ? n
+			condition neighbours < 2 /\ n < 2
+		}
+		
+		
+		
+		transition t3 {
+			from Watch
+			to Watch
+			trigger neighbourDetected ? n
+			condition neighbours >= 2 /\ n < 2
+			action # N ; neighbours = n
+		}
+		
+		transition t4 {
+			from Watch
+			to Watch
+			trigger neighbourDetected ? n
+			condition neighbours < 2 /\ n >= 2
+			action neighbours = n
+		}
+		transition t5 {
+			from Watch
+			to Watch
+			trigger objectSeen ? d
+			condition distance > 0 /\ d == 0
+			action distance = d
+		}
+		transition t6 {
+			from Watch
+			to Watch
+			trigger objectSeen ? d
+			condition distance > 0 /\ d > 0
+		}
+		transition t7 {
+			from Watch
+			to Watch
+			trigger neighbourDetected ? n
+			condition neighbours >= 2 /\ n >= 2
+		}
+			
+		
+	entry enableObjectWatch() ; enableNeighbourDetection() exit
+		disableObjectWatch() ; disableNeighbourDetection()
+	}
+	state Evading {
+		
+		
+		
+		
+		during evade()
+		
+	}
+	state MovingAround {
+		
+		
+		
+		
+		during moveAroundObject()
+	}
+	
+	
+	transition I0 { from I to Searching }
+	 
+	transition TS0 { from Searching to MovingToObject trigger objectSeen ? distance # T }
+
+	transition TM0 { from MovingToObject to Searching condition since(T) >= Ta }
+	transition TM1 { from MovingToObject to ClosingInOnObject condition distance < close /\ since(T) < Ta }
+	
+	transition CIO0 { from ClosingInOnObject to Searching condition since(T) >= Ta }
+	transition CIO1 { from ClosingInOnObject to Scanning trigger
+		condition distance == 0 /\ since ( T ) < Ta
+		action disableObjectWatch()
+	}
+	
+	transition SC0 { 
+		from Scanning to MovingAround 
+		trigger
+		condition goal /\ sinceEntry ( Scanning ) >= S
+	}
+	transition SC1 { 
+		from Scanning to Pushing trigger
+		condition not goal /\ sinceEntry ( Scanning ) >= S
+		action neighbours = 2 ; # C ; # N
+	}
+	
+	transition SP0 { from Pushing to Evading condition distance > 0 /\ since(C) >= Tc }
+	transition SP1 { from Pushing to Scanning trigger
+		condition neighbours < 2 /\ since ( N ) >= Tb }
+	
+	transition E0 { from Evading to Searching condition sinceEntry(Evading) >= Te }
+	transition M0 { from MovingAround to Searching condition sinceEntry(MovingAround) >= Td }
+}
+module System {
+	robotic platform ePuck {
+		provides IMotionControl
+	uses IObjectWatch uses IGoalWatch uses INeighbourWatch provides
+		INeighbourWatchOps provides IGoalWatchOps provides IObjectWatchOps
+	}
+	controller Controller {
+		requires IMotionControl sref stm_ref0 = Pusher
+	uses IObjectWatch uses IGoalWatch uses INeighbourWatch requires
+		INeighbourWatchOps requires IGoalWatchOps requires IObjectWatchOps connection
+		Controller on objectSeen to stm_ref0 on objectSeen
+		connection Controller on goalSeen to stm_ref0 on goalSeen
+		connection Controller on neighbourDetected to stm_ref0 on neighbourDetected
+	}
+	connection ePuck on objectSeen to Controller on objectSeen ( _async )
+	connection ePuck on neighbourDetected to Controller on neighbourDetected (
+	_async )
+	connection ePuck on goalSeen to Controller on goalSeen ( _async )
+}
