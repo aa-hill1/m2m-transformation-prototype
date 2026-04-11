@@ -444,11 +444,21 @@ public class ComponentFactory {
      * Creates an Operation Signature (OpSig) context row and updates TransformModel.
      * @param start
      * int pointing to index of start of the signature.
+     * @param compact
+     * boolean which determines whether the brackets in the operation signature name are within
+     * the same index as the operation name in {@code data}, or are separated from it.
      * @return offset to increment parser to starting index of next component.
      */
-    public int createOpSig(int start) {
-        int end = formatter.findStringIndex(start, ")");
-        String name = formatter.buildString(start, end+1, List.of(',', ':'));
+    public int createOpSig(int start, boolean compact) {
+        int end;
+        String name;
+        if (compact) {
+            end = start;
+            name = data.get(start);
+        } else {
+            end = formatter.findStringIndex(start, ")");
+            name = formatter.buildString(start, end+1, List.of(',', ':'));
+        }
         ContextData component = new ContextData(this.useNextId(), name, parentStack.peek(), ContextType.OP_SIG);
         updateModel(component);
         return 1 + (end-start);
@@ -490,7 +500,7 @@ public class ComponentFactory {
      */
     public int createTransition(int start) {
         String name = data.get(start);
-        int end = formatter.findStringIndex(start+1, "}");
+        int end = formatter.findStringIndex(start+1/*formatter.findStringIndex(start, "{")*/, "}");
         List<String> details = generateTransitionDetails(start + 2, end);
         Connection transition = new Connection(
                 this.useNextId(),
@@ -572,6 +582,11 @@ public class ComponentFactory {
                 default:
                     label.append(current);
             }
+        }
+        if (inCondition) {
+            label.append("]");
+        } else if (inProb) {
+            label.append("}");
         }
         if (srcId == null) {
             throw new RuntimeException(String.format("Transition %s missing source", data.get(start-2)));
