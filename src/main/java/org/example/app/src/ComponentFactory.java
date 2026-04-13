@@ -203,6 +203,8 @@ public class ComponentFactory {
      * String indicating the name of the component.
      * @param defName
      * String indicating the name of the component that this component references.
+     * @boolean opRef
+     * boolean indicating whether the Reference to create is an Operation Reference, or not.
      * @return 4 (offset to increment parser to starting index of next component).
      */
     public int createRef(String name, String defName, boolean opRef) {
