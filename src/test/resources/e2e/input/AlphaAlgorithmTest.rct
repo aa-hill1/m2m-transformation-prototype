@@ -107,7 +107,7 @@ import set_toolkit::*
 import sequence_toolkit::*
 interface CommHw {
 	event broadcast : ID 
-	event receive : ID * ID
+	event receive : ID*ID
 }
 interface Internal {
 	event robots : nat
@@ -116,8 +116,8 @@ stm Communication {
 	uses CommHw       
 	uses Internal 
 	const id : ID
-	var x : ID * ID , y : ID
-	var neighs : Set( ID )
+	var x : ID*ID , y : ID
+	var neighs : Set(ID)
 	const RC : nat
 	clock RCC
 	initial i1
@@ -187,7 +187,7 @@ module AggregationSoftware {
 	
 	event obstacle : Position
 	event broadcast : ID
-		event receive : ID * ID
+		event receive : ID*ID
 	}
 	cref ctrl_ref0 = MovementC
 	cref ctrl_ref1 = CommunicationC

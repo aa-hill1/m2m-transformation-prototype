@@ -487,6 +487,14 @@ public class ComponentFactory {
                     connection.setBidi(true);
                     offset = 10;
                 }
+                break;
+            case "(":
+                connection.makeAsync();
+                offset = 11;
+                if (data.get(start+10).equals("[mult]")) {
+                    connection.setBidi(true);
+                    offset = 12;
+                }
         }
         updateModel(connection);
         return offset;
@@ -713,7 +721,8 @@ public class ComponentFactory {
                 found = findCompEnd(start);
             } else {
                 for (int i=start; i<data.size(); i++) {
-                    if (data.get(i).equals(toFind)) {
+                    String current = data.get(i);
+                    if (current.equals(toFind) || (toFind.equals(")") && current.contains(toFind))) {
                         found = i;
                         break;
                     }
@@ -762,9 +771,9 @@ public class ComponentFactory {
             int current = start;
             while (!compStack.isEmpty()) {
                 current++;
-                if (data.get(current).equals("}")) {
+                if (data.get(current).contains("}")) {
                     compStack.pop();
-                } else if (data.get(current).equals("{")) {
+                } else if (data.get(current).contains("{")) {
                     compStack.push('{');
                 }
             }

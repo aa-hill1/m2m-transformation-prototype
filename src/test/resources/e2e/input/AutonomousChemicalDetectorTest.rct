@@ -97,8 +97,8 @@ stm GasAnalysis {
 		to Analysis
 		trigger gas ? gs
 	}
-	var gs : Seq( GasSensor )
-	event gas : Seq( GasSensor )
+	var gs : Seq(GasSensor)
+	event gas : Seq(GasSensor)
 	event resume
 	var i : Intensity
 	var a : Angle
@@ -156,38 +156,6 @@ sref stm_ref0 = GasAnalysis
 	connection stm_ref0 on turn to MainController on turn
 	connection stm_ref0 on stop to MainController on stop
 	connection stm_ref0 on resume to MainController on resume
-}
-controller MicroController {
-	
-	
-	event turn : Angle
-	
-	event obstacle : Loc
-	event flag
-	event stop
-	
-	event resume
-	event odometer : real
-	requires Operations
-sref stm_ref0 = Movement
-	
-	
-	
-	
-	
-	
-connection MicroController on turn to stm_ref0 on turn
-	
-	connection MicroController on obstacle to stm_ref0 on obstacle
-	
-	connection stm_ref0 on flag to MicroController on flag
-	
-	connection MicroController on resume to stm_ref0 on resume
-	
-	connection stm_ref0 on stop to MicroController on stop
-	
-	connection MicroController on odometer to stm_ref0 on odometer
-opref op_ref0 = changeDirection
 }
 interface MicroControllerOPS {
 	changeDirection( l : Loc)
@@ -351,10 +319,42 @@ requires MicroControllerOPS
 		to j1
 	}
 }
+controller MicroController {
+	
+	
+	event turn : Angle
+	
+	event obstacle : Loc
+	event flag
+	event stop
+	
+	event resume
+	event odometer : real
+	requires Operations
+sref stm_ref0 = Movement
+	
+	
+	
+	
+	
+	
+connection MicroController on turn to stm_ref0 on turn
+	
+	connection MicroController on obstacle to stm_ref0 on obstacle
+	
+	connection stm_ref0 on flag to MicroController on flag
+	
+	connection MicroController on resume to stm_ref0 on resume
+	
+	connection stm_ref0 on stop to MicroController on stop
+	
+	connection MicroController on odometer to stm_ref0 on odometer
+opref op_ref0 = changeDirection
+}
 module ChemicalDetector {
 	robotic platform Vehicle {		
 		event flag
-		provides Operations event gas : Seq( GasSensor )
+		provides Operations event gas : Seq(GasSensor)
 		event obstacle : Loc
 		event odometer : real
 	}

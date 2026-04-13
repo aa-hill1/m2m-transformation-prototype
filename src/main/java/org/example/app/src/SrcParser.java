@@ -40,7 +40,7 @@ public class SrcParser {
             case "enumeration":
                 offset = factory.createEnumRecord(i+1, SimpleCompType.ENUMERATION);
                 break;
-            case "record":
+            case "record", "datatype":
                 offset = factory.createEnumRecord(i+1, SimpleCompType.RECORD);
                 break;
             case "initial":

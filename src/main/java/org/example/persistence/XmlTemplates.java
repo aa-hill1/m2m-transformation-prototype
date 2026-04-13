@@ -56,7 +56,7 @@ public class XmlTemplates {
                             "fillColor=default;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;" +
                             "collapsible=0;marginBottom=0;whiteSpace=wrap;html=1;verticalAlign=middle;\" " +
                             "value=\"&lt;b&gt;imports&lt;/b&gt;\" vertex=\"1\">\n\t\t<mxGeometry height=\"52\" " +
-                            "width=\"140 x=\"",
+                            "width=\"140\" x=\"",
                     // x
                     "\" y=\"",
                     // y
@@ -753,7 +753,7 @@ public class XmlTemplates {
     }
 
     public static String[] getConstant() {
-        return combineIconData(CONSTANT, 2, "icons/var.properties");
+        return combineIconData(CONSTANT, 2, "icons/constant.properties");
     }
 
     public static String[] getVar() {

@@ -77,7 +77,11 @@ public class TgtGenerator {
                 if (children.containsKey("components")) {
                     pushToStacks(children.get("components").size());
                     for (NamedComponent child : children.get("components")) {
-                        compsToProcess.add(1, child);
+                        if (compsToProcess.isEmpty()) {
+                            compsToProcess.add(child);
+                        } else {
+                            compsToProcess.add(1, child);
+                        }
                     }
                 }
             }
