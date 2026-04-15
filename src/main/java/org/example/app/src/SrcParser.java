@@ -7,14 +7,35 @@ import org.example.app.transformModel.stm.JunctionType;
 
 import java.util.*;
 
+/**
+ * Class that iterates through the source model, calling factory methods to create transformation model components
+ * when it recognises RoboChart component definitions.
+ */
 public class SrcParser {
+    /**
+     * List containing .rct data, split by spaces and with all whitespace removed.
+     */
     List<String> data;
+
+    /**
+     * ComponentFactory class that handles transformation model component creation.
+     */
     ComponentFactory factory;
 
     public SrcParser(ArrayList<String> data) {
         this.data = data;
     }
 
+    // Used in testing with ComponentFactory mock.
+    public SrcParser(ArrayList<String> data, ComponentFactory factory) {
+        this.data = data;
+        this.factory = factory;
+    }
+
+    /**
+     * Methods iterates through {@code data} to create the transformation model.
+     * @return TransformModel instance of the newly generated transformation model.
+     */
     public TransformModel parse() {
         factory = new ComponentFactory(data);
         int index = 0;
@@ -24,7 +45,15 @@ public class SrcParser {
         return factory.getDataModel();
     }
 
-    private int patternMatch(int i) {
+    /**
+     * Method takes a RoboChart keyword from {@code data} and calls the relevant {@code ComponentFactory} method to
+     * create the corresponding component.
+     * @param i
+     * integer representing the index in {@code data} where the next keyword to check is.
+     * @return integer representing how much to increment the index so that it points to the next keyword in
+     * {@code data}.
+     */
+    public int patternMatch(int i) {
         int offset = 1;
         String pattern = data.get(i);
         switch (pattern) {
