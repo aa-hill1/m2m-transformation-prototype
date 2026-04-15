@@ -7,8 +7,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * Class that handles retrieving XML component templates from persistent storage to pass to CellFactory.
+ */
 public class XmlTemplates {
+    /**
+     * Properties used to access icon data stored in "resources/icons".
+     */
     private static Properties iconProperties = new Properties();
+    /**
+     * Array of strings representing a template for the base mxGraph to set up a diagram in draw.io.
+     */
     private static final String[] BASE =
             {
                     "<mxfile host=\"app.diagrams.net\" agent=\"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:148.0) " +
@@ -784,6 +793,17 @@ public class XmlTemplates {
         return combineIconData(original, 2, path);
     }
 
+    /**
+     * Method combines the {@code original} component template with the icon data from the .properties file at
+     * {@code path} from the resources folder at index {@code indexToCombo}.
+     * @param original
+     * array of strings representing the component template to combine with its icon data.
+     * @param indexToCombo
+     * integer representing the index position of {@code original} where icon data should be inserted.
+     * @param path
+     * string representing file path in 'resources/icons' to the icon data of the component template.
+     * @return array of strings ready for component data from the transformation model to be inserted into.
+     */
     private static String[] combineIconData(String[] original, int indexToCombo, String path) {
         String[] dataToReturn = new String[original.length - 1];
         try {
