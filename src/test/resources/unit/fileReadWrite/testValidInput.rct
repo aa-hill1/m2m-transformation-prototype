@@ -1,0 +1,8 @@
+record Direction    {
+	left    : real
+right : real     up : real
+            down : real
+
+
+
+}

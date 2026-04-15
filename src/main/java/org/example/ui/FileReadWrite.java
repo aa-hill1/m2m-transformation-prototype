@@ -71,7 +71,7 @@ public class FileReadWrite {
             System.out.println("Error reading from file at: " + inputFile.getPath());
         }
         if (inputData.isEmpty()) {
-            throw new RuntimeException(String.format("Error - file at %s is empty", inputFile.getPath()));
+            throw new RuntimeException(String.format("Error - file at %s is empty", inputFile.getName()));
         }
         return inputData;
     }
@@ -90,5 +90,12 @@ public class FileReadWrite {
             return false;
         }
         return true;
+    }
+
+    public File getInputFile() {
+        return inputFile;
+    }
+    public File getOutputFile() {
+        return outputFile;
     }
 }
