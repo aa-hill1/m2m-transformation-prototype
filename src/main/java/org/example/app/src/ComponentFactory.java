@@ -203,7 +203,7 @@ public class ComponentFactory {
      * String indicating the name of the component.
      * @param defName
      * String indicating the name of the component that this component references.
-     * @boolean opRef
+     * @param opRef
      * boolean indicating whether the Reference to create is an Operation Reference, or not.
      * @return 4 (offset to increment parser to starting index of next component).
      */
@@ -270,7 +270,7 @@ public class ComponentFactory {
         ContextComponent component = new ContextComponent(this.useNextId(), name, SimpleCompType.FUNCTION);
         updateModel(component);
         this.pushToParentStack(component.getId());
-        return 1 + (nameEnd-start);
+        return 1 + ((nameEnd+1)-start);
     }
 
     /**
@@ -315,7 +315,7 @@ public class ComponentFactory {
         updateModel(operation.getBody());
         this.incrementNextId(1); //For StmBody within operation.
         this.pushToParentStack(operation.getId());
-        return 1 + (nameEnd-start);
+        return 1 + ((nameEnd+1)-start);
     }
 
     /**
@@ -328,8 +328,13 @@ public class ComponentFactory {
         int offset = 2;
         String name;
         if (data.get(start+1).equals(":")) {
-            name = formatter.buildString(start, start+3, List.of(':'));
-            offset = 4;
+            if (data.get(start+2).equals("(")) {
+                name = formatter.buildString(start, start+5, List.of(':'));
+                offset = 6;
+            } else {
+                name = formatter.buildString(start, start+3, List.of(':'));
+                offset = 4;
+            }
         } else {
             name = data.get(start);
         }
@@ -376,13 +381,8 @@ public class ComponentFactory {
      */
     public int createVarConst(int start, ContextType type) {
         int end = start + 3;
-        if (data.get(start+3).equals(",")) {
-            for (int i=start+3; i < data.size(); i+=3) {
-                if (!data.get(i).equals(",")) {
-                    end = i - 3;
-                    break;
-                }
-            }
+        while (data.get(end).equals(",")) {
+            end += 4;
         }
         ContextData component = new ContextData(
                 this.useNextId(),
@@ -624,8 +624,12 @@ public class ComponentFactory {
      * @return int representing ID of the StmBody within the current parent component.
      */
     private int getStmBodyParentID() {
-        StmComponent parentComponent = (StmComponent) model.getCompById(parentStack.peek());
-        return parentComponent.getBody().getId();
+        try {
+            StmComponent parentComponent = (StmComponent) model.getCompById(parentStack.peek());
+            return parentComponent.getBody().getId();
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Error - state or junction not defined within a valid parent component.");
+        }
     }
 
     private class StringFormatting {
