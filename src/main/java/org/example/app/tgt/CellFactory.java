@@ -15,16 +15,35 @@ import org.example.persistence.XmlTemplates;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class containing methods that assemble individual RoboChart components in their target model form.
+ */
 public class CellFactory {
 
+    /**
+     * Fetches the headers, and opening tags for the diagram root, for an mxGraph diagram file from XmlTemplates.
+     * @return string containing the diagram headers.
+     */
     public String assembleStart() {
         return XmlTemplates.getStartBase();
     }
+
+    /**
+     * Fetches the footers, and closing tags for the diagram root, for an mxGraph diagram file from XmlTemplates.
+     * @return string containing the diagram headers.
+     */
     public String assembleEnd() {
         return XmlTemplates.getEndBase();
     }
 
-    // Package/TypeDec
+    /**
+     * Assembles and returns an RCPackage or primitive type declaration.
+     * @param component
+     * NameOnlyComponent instance representing the component to transform.
+     * @param coords
+     * x and y coordinates for positioning the transformed component.
+     * @return string representing the transformed component.
+     */
     public String assembleNameOnlyComp(NameOnlyComponent component, String[] coords) {
         String[] template =
                 (component.getType() == SimpleCompType.TYPE_DEC)? XmlTemplates.getTypeDec() : XmlTemplates.getPackage();
@@ -37,7 +56,14 @@ public class CellFactory {
         return createCell(template, data);
     }
 
-    // Imports/Enum/Record/Function/RCInterface
+    /**
+     * Assembles and returns an imports list, enum, record, function or RCInterface.
+     * @param component
+     * ContextComponent instance representing the component to transform.
+     * @param coords
+     * x and y coordinates for positioning the transformed component.
+     * @return string representing the transformed component.
+     */
     public String assembleContextComp(ContextComponent component, String[] coords) {
         String[] data;
         if (component.getType() == SimpleCompType.IMPORTS) {
@@ -65,7 +91,14 @@ public class CellFactory {
         return createCell(template, data) + createContext(component.getContext(), String.valueOf(component.getId()));
     }
 
-    // Module
+    /**
+     * Assembles and returns an RCModule.
+     * @param module
+     * RCModule instance representing the component to transform.
+     * @param coords
+     * x and y coordinates for positioning the transformed component.
+     * @return string representing the transformed component.
+     */
     public String assembleRCModule(RCModule module, String[] coords) {
         String[] data = {
                 module.getId() + "-0",
@@ -79,7 +112,14 @@ public class CellFactory {
                 createConnections(module.getConnections());
     }
 
-    // Junction
+    /**
+     * Assembles and returns a junction (of default, initial or probabilistic type).
+     * @param junction
+     * Junction instance representing the component to transform.
+     * @param coords
+     * x and y coordinates for positioning the transformed component.
+     * @return string representing the transformed component.
+     */
     public String assembleJunction(Junction junction, String[] coords) {
         String[] template = XmlTemplates.getJunction(junction.getType());
         String[] data = {
@@ -91,7 +131,14 @@ public class CellFactory {
         return createCell(template, data);
     }
 
-    // Reference
+    /**
+     * Assembles and returns a component Reference.
+     * @param ref
+     * Reference instance representing the component to transform.
+     * @param coords
+     * x and y coordinates for positioning the transformed component.
+     * @return string representing the transformed component.
+     */
     public String assembleRef(Reference ref, String[] coords) {
         String[] template;
         switch (ref.getReferencedObj().getType()) {
@@ -111,7 +158,14 @@ public class CellFactory {
                 createEventBoxes(ref.getEventBoxes(), String.valueOf(ref.getId()), 0.7f);
     }
 
-    // ControllerDef/RpDef
+    /**
+     * Assembles and returns a controller or robotic platform definition.
+     * @param component
+     * ContextEventComponent instance representing the component to transform.
+     * @param coords
+     * x and y coordinates for positioning the transformed component.
+     * @return string representing the transformed component.
+     */
     public String assembleConRpDef(ContextEventComponent component, String[] coords) {
         String connections = "";
         String[] template;
@@ -142,7 +196,44 @@ public class CellFactory {
                 connections;
     }
 
-    // State (incl. final)
+    /**
+     * Assembles and returns an operation or state machine definition.
+     * @param component
+     * StmComponent instance representing the component to transform.
+     * @param coords
+     * x and y coordinates for positioning the transformed component.
+     * @return string representing the transformed component.
+     */
+    public String assembleOpStmDef(StmComponent component, String[] coords) {
+        String[] template =
+                (component.getType() == ComplexCompType.STM)?
+                        XmlTemplates.getStm(true) : XmlTemplates.getOperation(true);
+        String[] data = {
+                String.valueOf(component.getId()),
+                String.valueOf(component.getParentId()),
+                component.getName(),
+                coords[0],
+                coords[1],
+                createContext(component.getContext(), String.valueOf(component.getId())),
+                String.valueOf(component.getBody().getId()),
+                String.valueOf(component.getId())
+        };
+        return createCell(template, data) +
+                createEventBoxes(
+                        component.getEventBoxes(),
+                        String.valueOf(component.getBody().getId()),
+                        component.getContainedComponentsCount()) +
+                createConnections(component.getBody().getTransitions());
+    }
+
+    /**
+     * Assembles and returns a (final) state definition.
+     * @param state
+     * State instance representing the component to transform.
+     * @param coords
+     * x and y coordinates for positioning the transformed component.
+     * @return string representing the transformed component.
+     */
     public String assembleState(State state, String[] coords) {
         String[] template;
         String[] data;
@@ -174,30 +265,17 @@ public class CellFactory {
         return dataToReturn;
     }
 
-    // OpDef/StmDef
-    public String assembleOpStmDef(StmComponent component, String[] coords) {
-        String[] template =
-                (component.getType() == ComplexCompType.STM)?
-                        XmlTemplates.getStm(true) : XmlTemplates.getOperation(true);
-        String[] data = {
-                String.valueOf(component.getId()),
-                String.valueOf(component.getParentId()),
-                component.getName(),
-                coords[0],
-                coords[1],
-                createContext(component.getContext(), String.valueOf(component.getId())),
-                String.valueOf(component.getBody().getId()),
-                String.valueOf(component.getId())
-        };
-        return createCell(template, data) +
-                createEventBoxes(
-                        component.getEventBoxes(),
-                        String.valueOf(component.getBody().getId()),
-                        component.getContainedComponentsCount()) +
-                createConnections(component.getBody().getTransitions());
-    }
-
-    // EventBoxes
+    /**
+     * Transforms and returns the event boxes of a component.
+     * @param boxes
+     * list of the event boxes to transform.
+     * @param parentID
+     * string representing the ID of the event box's parent component.
+     * @param multiplier
+     * float used as a multiplier to calculate the estimated x value to position the transformed event boxes so that
+     * they line up with the border of their parent.
+     * @return string representing the transformed components.
+     */
     public String createEventBoxes(List<EventBox> boxes, String parentID, float multiplier) {
         String estimatedXVal = String.valueOf(Math.round(multiplier * 160));
         String y = "0";
@@ -217,7 +295,12 @@ public class CellFactory {
         return dataToReturn.toString();
     }
 
-    // Connections/Transitions
+    /**
+     * Transforms and returns the given connections or transitions.
+     * @param conns
+     * list of Connections to be transformed.
+     * @return string representing the transformed components.
+     */
     public String createConnections(List<Connection> conns) {
         StringBuilder dataToReturn = new StringBuilder();
         for (Connection connection : conns) {
@@ -243,7 +326,14 @@ public class CellFactory {
         return dataToReturn.toString();
     }
 
-    // ContextData
+    /**
+     * Transforms and returns the context of a component.
+     * @param contextList
+     * list of ContextData representing the data to transform.
+     * @param parentID
+     * integer representing the ID of the component that {@code contextList} belongs to.
+     * @return string representing the transformed components.
+     */
     public String createContext(List<ContextData> contextList, String parentID) {
         StringBuilder contextToReturn = new StringBuilder();
         for (ContextData contextLine : contextList) {
@@ -258,6 +348,12 @@ public class CellFactory {
         return contextToReturn.toString();
     }
 
+    /**
+     * Fetches the mxGraph template of the desired type of context data from XmlTemplates.
+     * @param type
+     * ContextType representing the type of mxGraph template to return.
+     * @return array of strings representing the requested context data mxGraph template.
+     */
     private String[] getContextTemplate(ContextType type) {
         String[] template;
         switch (type) {
@@ -276,6 +372,15 @@ public class CellFactory {
         return template;
     }
 
+    /**
+     * Method performs the transformation for a component to create and return the desired mxGraph mxCell by combining
+     * the data in {@code template} and {@code data}.
+     * @param template
+     * array of strings representing the mxGraph template of the mxCell to create.
+     * @param data
+     * array of strings containing the component data to combine with strings in {@code template}.
+     * @return string representing the final, transformed component.
+     */
     public String createCell(String[] template, String[] data) {
         StringBuilder mxCell = new StringBuilder(template[0]);
         for (int i=0; i<data.length; i++) {
