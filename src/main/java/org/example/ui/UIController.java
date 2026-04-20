@@ -10,7 +10,7 @@ import java.util.Scanner;
 /**
  * Class that handles the textual input loop for the prototype.
  */
-public class UIController { // TODO: remove comments for error reporting
+public class UIController {
 
     public UIController() {}
 
@@ -57,7 +57,7 @@ public class UIController { // TODO: remove comments for error reporting
             if (reader.writeOutput(engine.transform())) {
                 System.out.println("File successfully transformed and output");
             }
-        } catch (/*RuntimeException |*/FileNotFoundException e) {
+        } catch (RuntimeException |FileNotFoundException e) {
             System.out.println(e.getMessage() + "\n\n");
         }
     }

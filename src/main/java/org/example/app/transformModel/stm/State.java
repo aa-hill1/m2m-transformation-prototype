@@ -12,7 +12,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class represents RoboChart States and Final States.
+ */
 public class State extends StmComponent {
+    /**
+     * boolean determining whether the state is a final state or not.
+     */
     private boolean finalState;
 
     public State(int id, String name, int parentId, boolean finalState) {
@@ -34,7 +40,8 @@ public class State extends StmComponent {
     @Override
     public void addContextLine(ContextData contextLine) {
         if (finalState) {
-            throw new RuntimeException("Cannot add context to a final state");
+            throw new RuntimeException(
+                    String.format("Cannot add context %s to final state %s", contextLine.getName(), name));
         }
         if (contextLine.getType() != ContextType.TEXT) {
             throw new RuntimeException(
@@ -58,15 +65,13 @@ public class State extends StmComponent {
 
     @Override
     public void addChild(NamedComponent child) {
-        if (finalState) {
+        if (finalState || child instanceof EventBox) {
             throw new RuntimeException(
                     String.format(
                     "Cannot make component %s a child of final state %s",
                     child.getName(),
                     name)
             );
-        } else if (child instanceof EventBox) {
-            addEventBox((EventBox) child);
         } else if (child instanceof ContextData) {
             addContextLine((ContextData) child);
         } else {

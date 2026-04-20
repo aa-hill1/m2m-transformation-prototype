@@ -40,7 +40,17 @@ public class SrcParser {
         factory = new ComponentFactory(data);
         int index = 0;
         while (index < data.size()) {
-            index += patternMatch(index);
+            try {
+                index += patternMatch(index);
+            } catch (RuntimeException e) {
+                System.out.println(e.getMessage());
+                throw new RuntimeException(String.format(
+                        "Error in parsing input at: \".. %s %s %s ..\".",
+                        data.get(index-1),
+                        data.get(index),
+                        data.get(index+1)));
+            }
+
         }
         return factory.getDataModel();
     }
