@@ -1,4 +1,4 @@
-package unit;
+package unit.app.src;
 
 import org.example.app.src.ComponentFactory;
 import org.example.app.transformModel.Controller;

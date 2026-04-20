@@ -1,4 +1,4 @@
-package unit;
+package unit.persistence;
 
 import org.example.persistence.XmlTemplates;
 import org.junit.jupiter.api.Test;

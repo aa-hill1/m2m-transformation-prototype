@@ -1,4 +1,4 @@
-package unit;
+package unit.app.tgt;
 
 import org.example.app.tgt.CellFactory;
 import org.example.app.tgt.TgtGenerator;

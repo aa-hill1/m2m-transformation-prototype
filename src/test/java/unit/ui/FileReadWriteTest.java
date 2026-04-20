@@ -1,4 +1,4 @@
-package unit;
+package unit.ui;
 
 import org.example.ui.FileReadWrite;
 import org.junit.jupiter.api.Test;
