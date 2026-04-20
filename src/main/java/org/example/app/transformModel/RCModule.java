@@ -11,12 +11,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class represents a RoboChart RCModule.
+ */
 public class RCModule extends NamedComponent {
+    /**
+     * List of Connection instances.
+     */
     private List<Connection> connections = new ArrayList<>();
+    /**
+     * List of Controller instances.
+     */
     private List<Controller> controllers = new ArrayList<>();
+    /**
+     * List of StmComponent instances representing the operation definitions in the RCModule.
+     */
     private List<StmComponent> operations = new ArrayList<>();
+    /**
+     * Lis of ContextEventComponent instances representing the robotic platform definitions in the RCModule.
+     */
     private List<ContextEventComponent> rps = new ArrayList<>();
+    /**
+     * List of StmComponent instances representing the state machine definitions in the RCModule.
+     */
     private List<StmComponent> stms = new ArrayList<>();
+    /**
+     * Lis of Reference instances representing all types of RoboChart component references in the RCModule.
+     */
     private List<Reference> refs = new ArrayList<>();
 
     public RCModule(int id, String name) {

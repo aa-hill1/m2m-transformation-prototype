@@ -9,9 +9,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class that represents the state diagram within StmComponent and State instances.
+ */
 public class StmBody extends NamedComponent {
+    /**
+     * List of State instances within the diagram.
+     */
     private List<State> states = new ArrayList<>();
+    /**
+     * List of Junction instances within the diagram.
+     */
     private List<Junction> junctions = new ArrayList<>();
+    /**
+     * List of Connection instances within the diagram.
+     */
     private List<Connection> transitions = new ArrayList<>();
 
     public StmBody(int id, String name, int parentId) {

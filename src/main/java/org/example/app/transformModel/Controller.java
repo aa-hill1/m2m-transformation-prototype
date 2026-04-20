@@ -12,10 +12,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class represents a RoboChart Controller definition.
+ */
 public class Controller extends ContextEventComponent {
+    /**
+     * List of Connection instances within the component.
+     */
     private List<Connection> connections = new ArrayList<>();
+    /**
+     * List of StmComponent instances representing State Machine definitions within the component.
+     */
     private List<StmComponent> stms = new ArrayList<>();
+    /**
+     * List of Reference instances representing all type of RoboChart component references in the component.
+     */
     private List<Reference> refs = new ArrayList<>();
+    /**
+     * List of StmComponent instances representing Operation definitions within the component.
+     */
     private List<StmComponent> operations = new ArrayList<>();
 
     public Controller(int id, String name) {

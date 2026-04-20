@@ -5,7 +5,13 @@ import org.example.app.transformModel.context.ContextType;
 
 import java.util.*;
 
+/**
+ * Class that represents the following RoboChart components: Enumeration, Record, RCInterface, Imports and Function.
+ */
 public class ContextComponent extends NameOnlyComponent {
+    /**
+     * List of ContextData instances that represents the component's context.
+     */
     protected List<ContextData> context = new ArrayList<>();
 
     public ContextComponent(int id, String name, SimpleCompType type) {
@@ -21,6 +27,10 @@ public class ContextComponent extends NameOnlyComponent {
         return context;
     }
 
+    /**
+     * Fetches all of the ContextData of type {@code ContextType.EVENT}.
+     * @return List of ContextData containing all events from the component's {@code context}.
+     */
     public List<ContextData> getEvents() {
         List<ContextData> events = new ArrayList<>();
         for (ContextData contextLine : context) {
@@ -49,7 +59,7 @@ public class ContextComponent extends NameOnlyComponent {
         } else {
             throw new RuntimeException(
                     String.format(
-                            "Cannot make component %s a child of contextComponent %s",
+                            "Cannot make component %s a child of component %s",
                             child.getName(),
                             name)
             );

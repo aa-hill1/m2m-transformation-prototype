@@ -1,7 +1,10 @@
 package org.example.app.transformModel.context;
 
+/**
+ * Enum representing every type of RoboChart Context data.
+ */
 public enum ContextType {
-    TEXT,
+    TEXT, // For Actions, Enumeration types and Record data
     PRECONDITION,
     POSTCONDITION,
     EVENT,
@@ -9,7 +12,7 @@ public enum ContextType {
     CONSTANT,
     VAR,
     CLOCK,
-    R_INTERFACE,
-    P_INTERFACE,
-    D_INTERFACE
+    R_INTERFACE, // Required Interface
+    P_INTERFACE, // Provided Interface
+    D_INTERFACE // Defined Interface
 }

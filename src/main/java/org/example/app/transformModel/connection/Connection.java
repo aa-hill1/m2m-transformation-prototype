@@ -2,10 +2,25 @@ package org.example.app.transformModel.connection;
 
 import org.example.app.transformModel.generalComps.NamedComponent;
 
+/**
+ * Class that represents RoboChart Connections and Transitions.
+ */
 public class Connection  extends NamedComponent {
+    /**
+     * integer representing the ID of the source of the component.
+     */
     private int src;
+    /**
+     * integer representing the ID of the target of the component.
+     */
     private int tgt;
+    /**
+     * boolean indicating whether the connection is bidirectional or not (always false for transitions).
+     */
     private boolean bidi;
+    /**
+     * String representing the label to be displayed in the target diagram alongside the connection/transition.
+     */
     private String label;
 
     // For connections between event boxes
@@ -56,9 +71,16 @@ public class Connection  extends NamedComponent {
         this.label = label;
     }
 
+    /**
+     * Method checks if the connection is asynchronous.
+     * @return true if the connection is asynchronous, otherwise false.
+     */
     public boolean isAsync() {
         return label.equals("async");
     }
+    /**
+     * Method makes the connection is asynchronous by setting {@code label} to 'async'.
+     */
     public void makeAsync() {
         label = "async";
     }

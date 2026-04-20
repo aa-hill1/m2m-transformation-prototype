@@ -11,7 +11,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class that represents one of the following RoboChart components: State Machine reference, Operation reference,
+ * Controller reference, Robotic Platform reference.
+ */
 public class Reference extends ContextEventComponent {
+    /**
+     * ContextEventComponent instance representing the component definition which this component references.
+     */
     private ContextEventComponent referencedObj;
 
     public Reference(int id, String name, int parentId, ContextEventComponent referencedObj) {
@@ -26,6 +33,10 @@ public class Reference extends ContextEventComponent {
         context = null;
     }
 
+    /**
+     * Uses the {@code referencedObj} to generate event boxes from the component this component references.
+     * @return List of EventBox instances representing this component's event boxes.
+     */
     public List<EventBox> createEventBoxes() {
         List<EventBox> refEventBoxes = referencedObj.getEventBoxes();
         int currentId = id + 1;

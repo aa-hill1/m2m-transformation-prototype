@@ -2,7 +2,13 @@ package org.example.app.transformModel.context;
 
 import org.example.app.transformModel.generalComps.ContextComponent;
 
+/**
+ * Class that represents a RoboChart Defined interface reference.
+ */
 public class DefInterfaceRef extends ContextData {
+    /**
+     * ContextComponent instance of the RCInterface this component references.
+     */
     private ContextComponent rcInterface;
 
     public DefInterfaceRef(int id, String name, int parentId, ContextComponent rcInterface) {

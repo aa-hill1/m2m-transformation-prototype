@@ -8,9 +8,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class that represents components that can have context data and event boxes, for example robotic platforms.
+ */
 public class ContextEventComponent extends NamedComponent {
+    /**
+     * ComplexCompType that represents the type of component that the class represents.
+     */
     protected ComplexCompType type;
+    /**
+     * List of ContextData instances that represents the component's context.
+     */
     protected List<ContextData> context = new ArrayList<>();
+    /**
+     * List of EventBox instances that represents the component's events.
+     */
     protected List<EventBox> eventBoxes = new ArrayList<>();
 
     public ContextEventComponent(int id, String name, ComplexCompType type) {
@@ -51,13 +63,20 @@ public class ContextEventComponent extends NamedComponent {
         eventBoxes.add(eventBox);
     }
 
+    /**
+     * Fetches an event box using the {@code name} of the event it represents.
+     * @param name
+     * string representing the name of the event linked to the desired event box.
+     * @return the desired EventBox instance.
+     */
     public EventBox getEventBoxWithName(String name) {
         for (EventBox box : eventBoxes) {
             if (box.getEventName().equals(name)) {
                 return box;
             }
         }
-        return null;
+        throw new RuntimeException(
+                String.format("Cannot get event box with name %s from component %s", name, this.name));
     }
 
     @Override

@@ -7,7 +7,14 @@ import org.example.app.transformModel.stm.StmBody;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class that represents the following RoboChart components: State Machines and Operation Definitions. These components
+ * each have a context, event boxes and contain a state diagram (represented by an {@code StmBody} instance).
+ */
 public class StmComponent extends ContextEventComponent {
+    /**
+     * StmBody instance that represents the component's state diagram.
+     */
     protected StmBody body;
 
     public StmComponent(int id, String name, ComplexCompType type) {
