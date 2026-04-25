@@ -1,9 +1,13 @@
+import org.gradle.kotlin.dsl.invoke
+import org.gradle.kotlin.dsl.test
+
 plugins {
     id("java")
+    application
 }
 
 group = "org.example"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 repositories {
     mavenCentral()
@@ -16,6 +20,18 @@ dependencies {
     testImplementation("org.mockito:mockito-core:5.+")
 }
 
-tasks.test {
-    useJUnitPlatform()
+application {
+    mainClass.set("org.example.Main")
 }
+
+tasks {
+    jar {
+        manifest {
+            attributes["Main-Class"] = application.mainClass.get()
+        }
+    }
+    test {
+        useJUnitPlatform()
+    }
+}
+

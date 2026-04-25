@@ -807,7 +807,7 @@ public class XmlTemplates {
     private static String[] combineIconData(String[] original, int indexToCombo, String path) {
         String[] dataToReturn = new String[original.length - 1];
         try {
-            iconProperties.load(new FileInputStream(XmlTemplates.class.getClassLoader().getResource(path).getPath()));
+            iconProperties.load(XmlTemplates.class.getClassLoader().getResourceAsStream(path));
             for (int i=0; i<original.length; i++) {
                 if (i ==  indexToCombo) {
                     dataToReturn[i] = original[i] + iconProperties.getProperty("img") + original[i+1];
